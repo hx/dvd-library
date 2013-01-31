@@ -1,4 +1,5 @@
 class Title < ActiveRecord::Base
+  include InvelosXmlImporting
 
   attr_accessible :barcode, :title
 
