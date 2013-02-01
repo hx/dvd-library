@@ -3,10 +3,6 @@ module InvelosXmlImporting
   module ClassMethods
 
     def from_xml(source)
-      begin
-        InvelosXmlImporter.const_missing self.to_s
-      end rescue false
-
       @@importer_class ||= InvelosXmlImporter.const_get self.to_s
       @@importer_class.import source
     end
