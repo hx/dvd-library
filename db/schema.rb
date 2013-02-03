@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130203003955) do
+ActiveRecord::Schema.define(:version => 20130203061931) do
 
   create_table "libraries", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -39,11 +39,24 @@ ActiveRecord::Schema.define(:version => 20130203003955) do
     t.datetime "updated_at",  :null => false
   end
 
+  create_table "studio_involvements", :force => true do |t|
+    t.integer  "studio_id"
+    t.integer  "title_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "studios", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "titles", :force => true do |t|
     t.string   "barcode"
     t.string   "title"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.text     "overview"
     t.string   "sort_title"
     t.integer  "production_year"

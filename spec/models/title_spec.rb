@@ -23,9 +23,21 @@ describe Title do
 
   subject { title }
 
-  it { should respond_to :library }
-  it { should respond_to :barcode }
-  it { should respond_to :title }
+  it 'should respond to a few methods' do
+    %w|
+      id
+      barcode
+      title
+      overview
+      sort_title
+      production_year
+      release_date
+      runtime
+      certification
+      roles
+      people
+    |.each { |w| title.should respond_to w.to_sym }
+  end
 
 end
 

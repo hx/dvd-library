@@ -28,7 +28,9 @@ class Title < ActiveRecord::Base
                   :certification
 
   belongs_to :library
-  has_many :roles, include: :person
+  has_many :roles, include: :person, dependent: :delete_all
   has_many :people, through: :roles
+  has_many :studio_involvements, include: :studio, dependent: :delete_all
+  has_many :studios, through: :studio_involvements
 
 end

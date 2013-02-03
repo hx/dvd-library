@@ -11,6 +11,7 @@ module InvelosXmlImporter
     map :Rating,          to: :certification
     map 'Actors/Actor',   to: :roles
     map 'Credits/Credit', to: :roles
+    map 'Studios/Studio', to: :studio_involvements
 
   end
 end
