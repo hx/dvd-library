@@ -11,11 +11,32 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130201112047) do
+ActiveRecord::Schema.define(:version => 20130203003955) do
 
   create_table "libraries", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "people", :force => true do |t|
+    t.string   "first_name"
+    t.string   "middle_name"
+    t.string   "last_name"
+    t.integer  "birth_year"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "roles", :force => true do |t|
+    t.integer  "title_id"
+    t.integer  "person_id"
+    t.string   "name"
+    t.string   "department"
+    t.string   "credited_as"
+    t.boolean  "uncredited"
+    t.boolean  "voice"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "titles", :force => true do |t|
@@ -23,6 +44,12 @@ ActiveRecord::Schema.define(:version => 20130201112047) do
     t.string   "title"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.text     "overview"
+    t.string   "sort_title"
+    t.integer  "production_year"
+    t.date     "release_date"
+    t.integer  "runtime"
+    t.string   "certification"
   end
 
   add_index "titles", ["barcode"], :name => "index_titles_on_barcode"

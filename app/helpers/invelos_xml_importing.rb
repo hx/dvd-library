@@ -2,13 +2,13 @@ module InvelosXmlImporting
 
   module ClassMethods
 
-    def from_xml(source)
+    def from_xml(*args)
       unless @importer_class
         class_name = self.name.to_sym
         InvelosXmlImporter.const_missing class_name unless InvelosXmlImporter.constants.include? class_name
         @importer_class = InvelosXmlImporter.const_get class_name
       end
-      @importer_class.import source
+      @importer_class.import *args
     end
 
     def type_of_column(column)
