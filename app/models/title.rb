@@ -17,8 +17,8 @@
 
 class Title < ActiveRecord::Base
 
-  InvelosXmlImporter.setup(self) do
-    map :UPC,             to: :barcode,         key: true, filter: lambda { |upc| upc.gsub(/\D+/, '') }
+  XmlImporter.setup(self) do
+    map :UPC,             to: :barcode,         key: true, value: lambda { |element| element.content.gsub(/\D+/, '') }
     map :Title,           to: :title
     map :SortTitle,       to: :sort_title
     map :Overview,        to: :overview
@@ -29,6 +29,8 @@ class Title < ActiveRecord::Base
     map 'Actors/Actor',   to: :roles
     map 'Credits/Credit', to: :roles
     map 'Studios/Studio', to: :studio_involvements
+    map 'Genres/Genre',   to: :title_genres
+    map 'MediaTypes/*[text()="true"]',   to: :title_media_types
   end
 
   attr_accessible :barcode,
@@ -40,10 +42,20 @@ class Title < ActiveRecord::Base
                   :runtime,
                   :certification
 
+  default_scope order 'sort_title'
+
   belongs_to :library
+
   has_many :roles, include: :person, dependent: :delete_all
   has_many :people, through: :roles
+
   has_many :studio_involvements, include: :studio, dependent: :delete_all
   has_many :studios, through: :studio_involvements
+
+  has_many :title_media_types, include: :media_type, dependent: :delete_all
+  has_many :media_types, through: :title_media_types
+
+  has_many :title_genres, include: :genre, dependent: :delete_all
+  has_many :genres, through: :title_genres
 
 end

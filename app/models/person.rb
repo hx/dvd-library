@@ -13,7 +13,7 @@
 
 class Person < ActiveRecord::Base
 
-  InvelosXmlImporter.setup(self) do
+  XmlImporter.setup(self) do
     map '@FirstName',    to: :first_name,     key: true
     map '@MiddleName',   to: :middle_name,    key: true
     map '@LastName',     to: :last_name,      key: true

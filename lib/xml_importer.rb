@@ -1,4 +1,4 @@
-class InvelosXmlImporter
+class XmlImporter
 
   @importers = {}
   @@setups = {}
@@ -9,7 +9,7 @@ class InvelosXmlImporter
       @importers[klass] ||= new klass
       (@@setups[klass] ||= []) << block if block
       def klass.from_xml *args
-        InvelosXmlImporter.import self, *args
+        XmlImporter.import self, *args
       end
     end
 
@@ -35,9 +35,7 @@ class InvelosXmlImporter
       attributes[association.foreign_key] = association.klass.from_xml source
     end
     process_maps(:flat, source) do |element, options|
-      content = element.content
-      content = options[:filter].call(content) if options[:filter]
-      attributes[options[:to] || element.name] = content
+      attributes[options[:to] || element.name] = options[:value] ? options[:value].call(element) : element.content
     end
     model = if model_keys.any?
       @klass.where(attributes.select { |k| model_keys.include?(k) } ).first_or_create attributes

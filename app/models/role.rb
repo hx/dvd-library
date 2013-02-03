@@ -16,7 +16,7 @@
 
 class Role < ActiveRecord::Base
 
-  InvelosXmlImporter.setup(self) do
+  XmlImporter.setup(self) do
     map %w|@Role @CreditSubtype|,  to: :name
     map '@CreditType',             to: :department,   default: 'Cast'
   end

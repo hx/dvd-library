@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: studios
+# Table name: genres
 #
 #  id         :integer          not null, primary key
 #  name       :string(255)
@@ -8,11 +8,13 @@
 #  updated_at :datetime         not null
 #
 
-class Studio < ActiveRecord::Base
+class Genre < ActiveRecord::Base
 
   XmlImporter.setup(self) { map '.', to: :name, key: true }
 
   attr_accessible :name
-  has_many :studio_involvements, include: :title, dependent: :delete_all
-  has_many :titles, through: :studio_involvements
+
+  has_many :title_genres, include: :title, dependent: :delete_all
+  has_many :titles, through: :title_genres
+
 end
