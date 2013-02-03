@@ -12,7 +12,13 @@
 #
 
 class Person < ActiveRecord::Base
-  include InvelosXmlImporting
+
+  InvelosXmlImporter.setup(self) do
+    map '@FirstName',    to: :first_name,     key: true
+    map '@MiddleName',   to: :middle_name,    key: true
+    map '@LastName',     to: :last_name,      key: true
+    map '@BirthYear',    to: :birth_year,     key: true
+  end
 
   attr_accessible :birth_year, :first_name, :last_name, :middle_name
 

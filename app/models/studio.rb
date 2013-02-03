@@ -9,7 +9,8 @@
 #
 
 class Studio < ActiveRecord::Base
-  include InvelosXmlImporting
+
+  InvelosXmlImporter.setup(self) { map '.', to: :name, key: true }
 
   attr_accessible :name
   has_many :studio_involvements, include: :title, dependent: :delete_all

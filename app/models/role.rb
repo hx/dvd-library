@@ -15,7 +15,11 @@
 #
 
 class Role < ActiveRecord::Base
-  include InvelosXmlImporting
+
+  InvelosXmlImporter.setup(self) do
+    map %w|@Role @CreditSubtype|,  to: :name
+    map '@CreditType',             to: :department,   default: 'Cast'
+  end
 
   attr_accessible :credit_type, :credited_as, :name, :uncredited, :voice, :title, :person
 

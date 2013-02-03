@@ -10,7 +10,8 @@
 #
 
 class StudioInvolvement < ActiveRecord::Base
-  include InvelosXmlImporting
+
+  InvelosXmlImporter.setup(self)
   
   attr_accessible :studio_id, :title_id
   belongs_to :title
