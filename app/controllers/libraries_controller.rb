@@ -4,4 +4,7 @@ class LibrariesController < ApplicationController
     @titles = @library.titles.map(&:title)
     #render text: 'One moment...', layout: :default
   end
+  def index
+    render text: 'Libraries. Yeah.', layout: :default
+  end
 end

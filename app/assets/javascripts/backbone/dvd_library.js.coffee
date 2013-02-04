@@ -4,7 +4,7 @@
 #= require_tree ./views
 #= require_tree ./routers
 
-Dvdlibrary = window.Dvdlibrary =
+DvdLibrary = window.DvdLibrary =
   Models: {}
   Collections: {}
   Routers: {}

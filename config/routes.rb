@@ -1,4 +1,4 @@
-Dvdlibrary::Application.routes.draw do
+DvdLibrary::Application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -50,9 +50,9 @@ Dvdlibrary::Application.routes.draw do
   # just remember to delete public/index.html.
   # root :to => 'welcome#index'
 
-  resources :libraries, only: :show
+  resources :libraries, only: [ :show, :index ]
 
-  root to: redirect(Rails.application.routes.url_helpers.library_path Library.first)
+  root to: 'Libraries#index'
 
 
   # See how all your routes lay out with "rake routes"

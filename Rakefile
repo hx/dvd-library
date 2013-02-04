@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Dvdlibrary::Application.load_tasks
+DvdLibrary::Application.load_tasks

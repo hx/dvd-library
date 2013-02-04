@@ -1,4 +1,4 @@
-Dvdlibrary = window.Dvdlibrary
+DvdLibrary = window.DvdLibrary
 AppRouter =
 
   routes:
@@ -7,8 +7,8 @@ AppRouter =
   show_library: (id) ->
     console.debug "Library ##{id}"
 
-AppRouter = Dvdlibrary.Routers.AppRouter = Backbone.Router.extend AppRouter
+AppRouter = DvdLibrary.Routers.AppRouter = Backbone.Router.extend AppRouter
 
 $ ->
-  window.Dvdlibrary.router = new AppRouter
+  window.DvdLibrary.router = new AppRouter
   Backbone.history.start pushState: true
