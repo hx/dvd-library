@@ -29,10 +29,10 @@ class XmlImporter
     source = Nokogiri::XML(source).children[0] unless source.respond_to? :xpath
     associations.select do |name, association|
       association.macro == :belongs_to &&
-          attributes.keys.exclude?(association.foreign_key) &&
+          attributes.keys.exclude?(association.foreign_key.to_sym) &&
           association.klass.respond_to?(:from_xml)
     end.each do |name, association|
-      attributes[association.foreign_key] = association.klass.from_xml source
+      attributes[association.foreign_key.to_sym] = association.klass.from_xml source
     end
     process_maps(:flat, source) do |element, options|
       attributes[options[:to] || element.name] = options[:value] ? options[:value].call(element) : element.content
