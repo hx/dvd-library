@@ -7,6 +7,7 @@ gem 'rails'
 
 gem 'sqlite3'
 gem 'nokogiri'
+gem 'pg'
 
 group :test, :development do
   gem 'spork'

@@ -13,6 +13,7 @@
 #  release_date    :date
 #  runtime         :integer
 #  certification   :string(255)
+#  library_id      :integer
 #
 
 require 'spec_helper'

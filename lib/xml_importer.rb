@@ -26,7 +26,7 @@ class XmlImporter
 
   def import(source, attributes = {})
     run_pending_setups
-    source = Nokogiri::XML(source).children[0] unless source.respond_to? :xpath
+    source = Nokogiri::XML(source).root unless source.respond_to? :xpath
     associations.select do |name, association|
       association.macro == :belongs_to &&
           attributes.keys.exclude?(association.foreign_key.to_sym) &&
