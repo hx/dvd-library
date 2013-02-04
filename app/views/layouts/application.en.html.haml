@@ -1,5 +1,5 @@
 !!! 5
-%html
+%html{lang: I18n.locale}
   %head
     %title DVD Library
     %base{href: '/'}
@@ -7,4 +7,5 @@
     = javascript_include_tag "application"
     = csrf_meta_tags
   %body
+    = image_tag 'background.jpg', id: 'background'
     = yield
