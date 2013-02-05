@@ -14,4 +14,4 @@
 //= require jquery_ujs
 //= require_tree ../../../vendor/assets/javascripts/underscore
 //= require_tree ../../../vendor/assets/javascripts/backbone
-//= require_tree .
+//= require backbone/dvd_library

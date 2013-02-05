@@ -1,14 +1,13 @@
-DvdLibrary = window.DvdLibrary
-AppRouter =
+DvdLibrary.Routers.AppRouter = AppRouter = Backbone.Router.extend
 
   routes:
-    'libraries/:id' : 'show_library'
+    'libraries/:library_id/titles(/*scope)' : 'titles_index'
 
-  show_library: (id) ->
-    console.debug "Library ##{id}"
-
-AppRouter = DvdLibrary.Routers.AppRouter = Backbone.Router.extend AppRouter
+  titles_index: (library_id, scope) ->
+    view = DvdLibrary.Views.LibraryView.getInstance()
+    view.model = DvdLibrary.Models.Library.getInstance library_id
+    view.render scope
 
 $ ->
-  window.DvdLibrary.router = new AppRouter
+  DvdLibrary.router = new AppRouter
   Backbone.history.start pushState: true
