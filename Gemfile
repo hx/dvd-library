@@ -10,6 +10,7 @@ gem 'nokogiri'
 gem 'pg'
 
 group :test, :development do
+  gem 'capybara'
   gem 'spork'
   gem 'rspec-rails'
   gem 'syntax'

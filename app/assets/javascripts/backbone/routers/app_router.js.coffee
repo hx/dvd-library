@@ -5,8 +5,8 @@ DvdLibrary.Routers.AppRouter = AppRouter = Backbone.Router.extend
 
   titles_index: (library_id, scope) ->
     view = DvdLibrary.Views.LibraryView.getInstance()
-    view.model = DvdLibrary.Models.Library.getInstance library_id
-    view.render scope
+    view.model = DvdLibrary.Models.Library.getInstanceById library_id
+    view.render new DvdLibrary.TitleScopeSet scope
 
 $ ->
   DvdLibrary.router = new AppRouter

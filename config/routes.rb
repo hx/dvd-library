@@ -50,7 +50,7 @@ DvdLibrary::Application.routes.draw do
   # just remember to delete public/index.html.
   # root :to => 'welcome#index'
 
-
+  get 'tests', to: 'Qunit#show'
 
   resources :libraries, only: :index do
     get 'titles(/*scope)', to: 'Titles#index'

@@ -7,21 +7,51 @@ Views.LibraryView = LibraryView = Backbone.View.extend
   className: 'library'
 
   initialize: ->
-    @$el.appendTo 'body'
-    @filmStripView = new Views.FilmStripView
+    @setup_timers()
+
+    @$el.appendTo('body')
+      .append((@filmStripView = new Views.FilmStripView).el)
+      .append((@focusedTitleView = new Views.FocusedTitleView).el)
+
+    @on 'resize', ->
+      @focusedTitleView.layout()
+      $.fn.fitTextHeight.fit()
+
     @render if @model
 
-  render: (newScope) ->
-    return if @scope == newScope
+  render: (newScopeSet) ->
+    return if @scopeSet == newScopeSet
 
     #if @scope
       #todo deal with old scope
 
-    @scope = newScope
+    @scopeSet = newScopeSet
 
+    @model.getTitlesForScopes newScopeSet, (titles) ->
+      #todo render titles
 
+  setup_timers: ->
+    $html = $('html')
+    view = this
+    metrics = -> [
+      view.$el.width()
+      view.$el.height()
+      $html.scrollLeft()
+      $html.scrollTop()
+    ]
+    [lastWidth, lastHeight, lastScrollLeft, lastScrollTop] = metrics()
+    setInterval ->
+      [width, height, scrollLeft, scrollTop] = newMetrics = metrics()
 
+      if width != lastWidth || height != lastHeight
+        view.trigger 'resize', width, height, lastWidth, lastHeight
 
+      if scrollLeft != lastScrollLeft || scrollTop != lastScrollTop
+        view.trigger 'scroll', scrollLeft, scrollTop, lastScrollLeft, lastScrollTop
+
+      [lastWidth, lastHeight, lastScrollLeft, lastScrollTop] = newMetrics
+
+    , 40
 
 , # static members
 

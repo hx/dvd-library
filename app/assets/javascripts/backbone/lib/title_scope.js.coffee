@@ -75,8 +75,8 @@ DvdLibrary.TitleSearchScope = class TitleSearchScope extends TitleFilterScope
 
 DvdLibrary.TitleRuntimeScope = class TitleRuntimeScope extends TitleFilterScope
 
-  constructor: (min, max) ->
-    [min, max] = [max, min] if min > max
+  constructor: (@min, @max) ->
+    [@min, @max] = [@max, @min] if @min > @max
 
   toString: -> "runtime/#{@min}-#{@max}"
 
@@ -90,7 +90,11 @@ DvdLibrary.TitleComparisonScope = class TitleComparisonScope extends TitleFilter
 
 DvdLibrary.TitleDateScope = class TitleDateScope extends TitleComparisonScope
 
-  valueAsString: -> @value.toISOString().substr(0, 10)
+  valueAsString: ->
+    @value.getFullYear() + '-' +
+    ('0' + (@value.getMonth() + 1)).slice(-2) + '-' +
+    ('0' + @value.getDate()).slice(-2)
+
 
 
 

@@ -11,4 +11,5 @@
   Collections: {}
   Routers: {}
   Views: {}
+  ajax: (path) -> $.ajax path + '.json'
 

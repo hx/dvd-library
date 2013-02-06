@@ -1,0 +1,20 @@
+!!! 5
+%html{lang: I18n.locale}
+  %head
+    %title Tests - DVD Library
+    %base{href: '/'}
+    %meta{charset: 'utf-8'}
+    = javascript_include_tag "application"
+    = javascript_include_tag '//code.jquery.com/qunit/qunit-1.11.0.js'
+    = stylesheet_link_tag    '//code.jquery.com/qunit/qunit-1.11.0.css'
+    = javascript_include_tag 'tests'
+    = csrf_meta_tags
+  %body
+    %p{style: 'position: absolute; right: 20px; top: 10px'}
+      %a{href: 'tests', style: 'color: white'} Reload
+    %h1#qunit-header DVD Library Test Suite
+    %h2#qunit-banner
+    #qunit-testrunner-toolbar
+    %h2#qunit-userAgent
+    %ol#qunit-tests
+    #qunit-fixture

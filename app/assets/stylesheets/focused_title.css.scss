@@ -1,0 +1,67 @@
+@import '_mixins';
+
+div.focused-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 55%;
+
+  $poster-bottom: 21.85%;
+
+  .poster-container {
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    top: 6.6%;
+    bottom: $poster-bottom;
+
+    .poster-background {
+      background: black;
+      position: absolute;
+      @include box-shadow(0 0 50px rgba(0, 0, 0, .5));
+
+      .poster {
+        position: absolute;
+        $margin: 7px;
+        top: $margin;
+        left: $margin;
+        bottom: $margin;
+        right: $margin;
+        background: #35415f;
+      }
+
+    }
+  }
+
+  .summary {
+    position: absolute;
+    left: -1000px;
+    right: -1000px;
+    bottom: 0;
+    top: 100 - $poster-bottom;
+
+    div {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      line-height: 1em;
+    }
+
+    .title-title {
+      top: 18%;
+      height: 25%;
+      @include text-shadow(0 1px 12px rgba(0, 0, 0, .6));
+    }
+
+    .title-director {
+      height: 8.4%;
+      top: 44%;
+    }
+
+    .title-cast {
+      height: 8.4%;
+      top: 67%;
+    }
+  }
+}

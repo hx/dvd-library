@@ -1,0 +1,8 @@
+@import "_mixins";
+
+div.library {
+  @include fullscreen;
+  z-index: 1;
+  font-family: 'Gill Sans MT', 'Gill Sans';
+  color: white;
+}
