@@ -18,6 +18,8 @@
 
 class Title < ActiveRecord::Base
 
+  acts_as_tree
+
   XmlImporter.setup(self) do
     map :UPC,             to: :barcode,         key: true, value: lambda { |element| element.content.gsub(/\D+/, '') }
     map :Title,           to: :title

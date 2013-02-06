@@ -30,7 +30,8 @@ class XmlImporter
     associations.select do |name, association|
       association.macro == :belongs_to &&
           attributes.keys.exclude?(association.foreign_key.to_sym) &&
-          association.klass.respond_to?(:from_xml)
+          association.klass.respond_to?(:from_xml) &&
+          name != :parent
     end.each do |name, association|
       attributes[association.foreign_key.to_sym] = association.klass.from_xml source
     end

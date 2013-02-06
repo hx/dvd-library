@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130204032911) do
+ActiveRecord::Schema.define(:version => 20130206115938) do
 
   create_table "genres", :force => true do |t|
     t.string   "name"
@@ -85,6 +85,15 @@ ActiveRecord::Schema.define(:version => 20130204032911) do
 
   add_index "title_genres", ["genre_id", "title_id"], :name => "index_title_genres_on_genre_id_and_title_id", :unique => true
 
+  create_table "title_hierarchies", :id => false, :force => true do |t|
+    t.integer "ancestor_id",   :null => false
+    t.integer "descendant_id", :null => false
+    t.integer "generations",   :null => false
+  end
+
+  add_index "title_hierarchies", ["ancestor_id", "descendant_id"], :name => "index_title_hierarchies_on_ancestor_id_and_descendant_id", :unique => true
+  add_index "title_hierarchies", ["descendant_id"], :name => "index_title_hierarchies_on_descendant_id"
+
   create_table "title_media_types", :force => true do |t|
     t.integer  "title_id"
     t.integer  "media_type_id"
@@ -106,6 +115,7 @@ ActiveRecord::Schema.define(:version => 20130204032911) do
     t.integer  "runtime"
     t.string   "certification"
     t.integer  "library_id"
+    t.integer  "parent_id"
   end
 
   add_index "titles", ["barcode"], :name => "index_titles_on_barcode"

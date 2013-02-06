@@ -8,6 +8,7 @@ gem 'rails'
 gem 'sqlite3'
 gem 'nokogiri'
 gem 'pg'
+gem 'closure_tree'
 
 group :test, :development do
   gem 'capybara'
