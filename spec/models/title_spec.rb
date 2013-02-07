@@ -14,6 +14,8 @@
 #  runtime         :integer
 #  certification   :string(255)
 #  library_id      :integer
+#  parent_id       :integer
+#  vendor_id       :string(255)
 #
 
 require 'spec_helper'
@@ -37,6 +39,9 @@ describe Title do
       certification
       roles
       people
+      parent
+      children
+      vendor_id
     |.each { |w| title.should respond_to w.to_sym }
   end
 
@@ -47,6 +52,7 @@ describe Title do
     let(:title) { Title.from_xml source }
 
     it { should be_an_instance_of Title }
+    its(:vendor_id)       { should == 'SAMPLE_TITLE.2' }
     its(:title)           { should == 'The Quick & the Dead' }
     its(:sort_title)      { should == 'Quick & the Dead, The' }
     its(:barcode)         { should == '123456789' }
@@ -64,6 +70,19 @@ describe Title do
       end
 
       it { should == @second_copy }
+
+    end
+
+    describe 'hierarchy' do
+
+      before do
+        @child_title = Title.from_xml SAMPLE_CHILD_XML
+        @parent_title = Title.from_xml SAMPLE_PARENT_XML
+        title.children.reload
+      end
+
+      its(:children)  { should include @child_title }
+      its(:parent)    { should == @parent_title }
 
     end
 

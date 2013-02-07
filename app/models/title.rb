@@ -14,6 +14,8 @@
 #  runtime         :integer
 #  certification   :string(255)
 #  library_id      :integer
+#  parent_id       :integer
+#  vendor_id       :string(255)
 #
 
 class Title < ActiveRecord::Base
@@ -21,7 +23,8 @@ class Title < ActiveRecord::Base
   acts_as_tree
 
   xml_importer do
-    map :UPC,             to: :barcode,         key: true, value: lambda { |element| element.content.gsub(/\D+/, '') }
+    map :ID,              to: :vendor_id,       key: true
+    map :UPC,             to: :barcode,         value: lambda { |element| element.content.gsub(/\D+/, '') }
     map :Title,           to: :title
     map :SortTitle,       to: :sort_title
     map :Overview,        to: :overview
@@ -33,7 +36,9 @@ class Title < ActiveRecord::Base
     map 'Credits/Credit', to: :roles
     map 'Studios/Studio', to: :studio_involvements
     map 'Genres/Genre',   to: :title_genres
-    map 'MediaTypes/*[text()="true"]',   to: :title_media_types
+    map 'MediaTypes/*[text()="true"]',  to: :title_media_types
+    map 'BoxSet/Parent',                to: :parent
+    map 'BoxSet/Contents/Content',      to: :children
   end
 
   attr_accessible :barcode,
@@ -43,9 +48,12 @@ class Title < ActiveRecord::Base
                   :production_year,
                   :release_date,
                   :runtime,
-                  :certification
+                  :certification,
+                  :vendor_id
 
   default_scope order 'sort_title'
+
+  scope :top_level, where(parent_id: nil)
 
   belongs_to :library
 

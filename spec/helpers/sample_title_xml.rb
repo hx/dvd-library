@@ -1,5 +1,6 @@
 SAMPLE_TITLE_XML = <<-XML
 <DVD>
+  <ID>SAMPLE_TITLE.2</ID>
   <Title>The Quick &amp; the Dead</Title>
   <SortTitle>Quick &amp; the Dead, The</SortTitle>
   <UPC>123-456-789</UPC>
@@ -28,5 +29,36 @@ SAMPLE_TITLE_XML = <<-XML
     <Studio>Columbia</Studio>
     <Studio>Tristar</Studio>
   </Studios>
+  <BoxSet>
+    <Parent>SAMPLE_PARENT.2</Parent>
+    <Contents>
+      <Content>SAMPLE_CHILD.2</Content>
+    </Contents>
+  </BoxSet>
 </DVD>
 XML
+
+SAMPLE_CHILD_XML = <<-XML
+<DVD>
+  <ID>SAMPLE_CHILD.2</ID>
+  <Title>Quick/Dead Special Features</Title>
+  <BoxSet>
+    <Parent>SAMPLE_TITLE.2</Parent>
+    <Contents/>
+  </BoxSet>
+</DVD>
+XML
+
+SAMPLE_PARENT_XML = <<-XML
+<DVD>
+  <ID>SAMPLE_PARENT.2</ID>
+  <Title>Quick/Dead Special Features</Title>
+  <BoxSet>
+    <Parent/>
+    <Contents>
+      <Content>SAMPLE_TITLE.2</Content>
+    </Contents>
+  </BoxSet>
+</DVD>
+XML
+
