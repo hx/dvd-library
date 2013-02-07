@@ -5,14 +5,20 @@ DvdLibrary.Views.FilmStripView = FilmStripView = Backbone.View.extend
   className: 'film-strip'
 
   initialize: ->
-    @widthSetter = $('<div>', class: 'width-setter', html: '&nbsp;').appendTo 'body'
     @$el.html FilmStripView.template
-
-  setScrollWidth: (width) ->
-    @widthSetter.$el.width width
-
+    @leftThumbs  = @$('.thumbs.left')
+    @rightThumbs = @$('.thumbs.right')
 
   render: ->
+
+  setTitles: (titles) ->
+
+  setPosition: (position) ->
+
+  setBlindArea: (left, right) ->
+    @leftThumbs.width  left
+    @rightThumbs.width right
+
 
 , # static members
 

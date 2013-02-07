@@ -10,7 +10,8 @@ DvdLibrary.Views.FocusedTitleView = FocusedTitleView = Backbone.View.extend
     @posterBackground = @$ '.poster-background'
     @$('.summary div').fitTextHeight()
 
-  render: ->
+  render: (model) ->
+
 
   layout: ->
     @posterBackground.css DvdLibrary.Helpers.fitBoxWithinBox(
@@ -20,8 +21,12 @@ DvdLibrary.Views.FocusedTitleView = FocusedTitleView = Backbone.View.extend
       @posterContainer.height()
     )
 
-  imageWidth: -> 500
+  imageWidth: -> 550
   imageHeight: -> 750
+
+  blindArea: ->
+    left:  @posterBackground[0].offsetLeft + @posterContainer[0].offsetLeft
+    width: @posterBackground.width()
 
 , # static members
 

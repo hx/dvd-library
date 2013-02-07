@@ -7,15 +7,21 @@ Views.LibraryView = LibraryView = Backbone.View.extend
   className: 'library'
 
   initialize: ->
-    @setup_timers()
+    @setupTimers()
+
+    @widthSetter = $('<div>', class: 'width-setter', html: '&nbsp;').appendTo 'body'
 
     @$el.appendTo('body')
       .append((@filmStripView = new Views.FilmStripView).el)
       .append((@focusedTitleView = new Views.FocusedTitleView).el)
 
-    @on 'resize', ->
-      @focusedTitleView.layout()
-      $.fn.fitTextHeight.fit()
+    @on 'resize', (width) ->
+      @windowWidth = width
+      @layout()
+
+    @on 'scroll', (scrollLeft) ->
+      @scrollLeft = scrollLeft
+      @layout()
 
     @render if @model
 
@@ -27,10 +33,34 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
     @scopeSet = newScopeSet
 
-    @model.getTitlesForScopes newScopeSet, (titles) ->
-      #todo render titles
+    @model.getTitlesForScopes newScopeSet, (titles) =>
+      @titles = titles
+      @filmStripView.setTitles titles
 
-  setup_timers: ->
+      # aim to have 10 thumbs on the screen
+      @setScrollWidth @$el.width() * titles.length / 10
+
+  setScrollWidth: (width) ->
+    @widthSetter.width @scrollWidth = width
+
+  layout: ->
+    return unless @titles
+
+    scrollPosition = @scrollLeft / (@scrollWidth - @windowWidth)
+    titlesPosition = scrollPosition * @titles.length
+    focusedTitleIndex = Math.round titlesPosition
+
+    @focusedTitleView.layout()
+    @focusedTitleView.render @titles[focusedTitleIndex]
+
+    blindArea = @focusedTitleView.blindArea()
+    @filmStripView.setBlindArea blindArea.left, @windowWidth - blindArea.width - blindArea.left
+
+    $.fn.fitTextHeight.fit()
+
+
+
+  setupTimers: ->
     $html = $('html')
     view = this
     metrics = -> [
@@ -51,7 +81,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
       [lastWidth, lastHeight, lastScrollLeft, lastScrollTop] = newMetrics
 
-    , 40
+    , 30
 
 , # static members
 
