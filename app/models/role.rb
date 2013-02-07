@@ -16,7 +16,7 @@
 
 class Role < ActiveRecord::Base
 
-  XmlImporter.setup(self) do
+  xml_importer do
     map %w|@Role @CreditSubtype|,  to: :name
     map '@CreditType',             to: :department,   default: 'Cast'
   end

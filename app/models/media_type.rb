@@ -10,7 +10,7 @@
 
 class MediaType < ActiveRecord::Base
 
-  XmlImporter.setup(self) do
+  xml_importer do
     map '.', to: :name, key: true, value: lambda { |element| Rails.logger.debug(element); element.name }
   end
 

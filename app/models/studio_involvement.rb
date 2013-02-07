@@ -11,7 +11,7 @@
 
 class StudioInvolvement < ActiveRecord::Base
 
-  XmlImporter.setup self
+  xml_importer
   
   attr_accessible :studio_id, :title_id
   belongs_to :title

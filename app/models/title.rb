@@ -20,7 +20,7 @@ class Title < ActiveRecord::Base
 
   acts_as_tree
 
-  XmlImporter.setup(self) do
+  xml_importer do
     map :UPC,             to: :barcode,         key: true, value: lambda { |element| element.content.gsub(/\D+/, '') }
     map :Title,           to: :title
     map :SortTitle,       to: :sort_title

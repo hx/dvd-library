@@ -10,7 +10,7 @@
 
 class Genre < ActiveRecord::Base
 
-  XmlImporter.setup(self) { map '.', to: :name, key: true }
+  xml_importer { map '.', to: :name, key: true }
 
   attr_accessible :name
 

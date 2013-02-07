@@ -11,7 +11,7 @@
 
 class TitleMediaType < ActiveRecord::Base
 
-  XmlImporter.setup self
+  xml_importer
 
   attr_accessible :media_type_id, :title_id
 

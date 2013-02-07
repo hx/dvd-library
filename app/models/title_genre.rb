@@ -11,7 +11,7 @@
 
 class TitleGenre < ActiveRecord::Base
 
-  XmlImporter.setup self
+  xml_importer
 
   attr_accessible :genre_id, :title_id
 

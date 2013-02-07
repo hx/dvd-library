@@ -13,7 +13,7 @@
 
 class Person < ActiveRecord::Base
 
-  XmlImporter.setup(self) do
+  xml_importer do
     map '@FirstName',    to: :first_name,     key: true
     map '@MiddleName',   to: :middle_name,    key: true
     map '@LastName',     to: :last_name,      key: true
