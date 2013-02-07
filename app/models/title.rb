@@ -69,4 +69,14 @@ class Title < ActiveRecord::Base
   has_many :title_genres, include: :genre, dependent: :delete_all
   has_many :genres, through: :title_genres
 
+  TV_PATTERN = /(st|nd|rd|th|complete|final) (Seasons?|Series)|(Seasons?|Series|Volumes?) (\d|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|[a-z]+teen|twenty)/i
+
+  def tv?
+    @is_tv ||= !!title.match(TV_PATTERN) || genres.tv.any?
+  end
+
+  def poster
+    @poster ||= Poster.new self
+  end
+
 end

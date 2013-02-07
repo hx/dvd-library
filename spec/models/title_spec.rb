@@ -42,6 +42,7 @@ describe Title do
       parent
       children
       vendor_id
+      poster
     |.each { |w| title.should respond_to w.to_sym }
   end
 

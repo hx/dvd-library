@@ -17,3 +17,6 @@
 .DS_Store
 .idea
 /nbproject
+
+/public/posters/*.jpg
+/api_keys.yml

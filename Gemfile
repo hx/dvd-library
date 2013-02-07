@@ -9,6 +9,7 @@ gem 'sqlite3'
 gem 'nokogiri'
 gem 'pg'
 gem 'closure_tree'
+gem 'ruby-tmdb3'
 
 group :test, :development do
   gem 'capybara'

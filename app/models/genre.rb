@@ -17,4 +17,6 @@ class Genre < ActiveRecord::Base
   has_many :title_genres, include: :title, dependent: :delete_all
   has_many :titles, through: :title_genres
 
+  scope :tv, where(name: 'Television')
+
 end
