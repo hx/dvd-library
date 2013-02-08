@@ -38,7 +38,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
       @filmStripView.setTitles titles
 
       # aim to have 10 thumbs on the screen
-      @setScrollWidth @windowWidth + @$el.width() * (titles.length - 1) / 10
+      @setScrollWidth (@windowWidth ||= @$el.width()) + @$el.width() * (titles.length - 1) / 10
 
       @layout()
 
@@ -67,23 +67,21 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
 
   setupTimers: ->
-    $html = $('html')
-    view = this
-    metrics = -> [
-      view.$el.width()
-      view.$el.height()
-      $html.scrollLeft()
-      $html.scrollTop()
+    metrics = => [
+      @$el.width()
+      @$el.height()
+      window.scrollX
+      window.scrollY
     ]
     [lastWidth, lastHeight, lastScrollLeft, lastScrollTop] = metrics()
-    setInterval ->
+    setInterval =>
       [width, height, scrollLeft, scrollTop] = newMetrics = metrics()
 
       if width != lastWidth || height != lastHeight
-        view.trigger 'resize', width, height, lastWidth, lastHeight
+        @trigger 'resize', width, height, lastWidth, lastHeight
 
       if scrollLeft != lastScrollLeft || scrollTop != lastScrollTop
-        view.trigger 'scroll', scrollLeft, scrollTop, lastScrollLeft, lastScrollTop
+        @trigger 'scroll', scrollLeft, scrollTop, lastScrollLeft, lastScrollTop
 
       [lastWidth, lastHeight, lastScrollLeft, lastScrollTop] = newMetrics
 
