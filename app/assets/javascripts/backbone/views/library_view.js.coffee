@@ -38,7 +38,9 @@ Views.LibraryView = LibraryView = Backbone.View.extend
       @filmStripView.setTitles titles
 
       # aim to have 10 thumbs on the screen
-      @setScrollWidth @$el.width() * titles.length / 10
+      @setScrollWidth @windowWidth + @$el.width() * (titles.length - 1) / 10
+
+      @layout()
 
   setScrollWidth: (width) ->
     @widthSetter.width @scrollWidth = width
@@ -47,14 +49,18 @@ Views.LibraryView = LibraryView = Backbone.View.extend
     return unless @titles
 
     scrollPosition = @scrollLeft / (@scrollWidth - @windowWidth)
-    titlesPosition = scrollPosition * @titles.length
-    focusedTitleIndex = Math.round titlesPosition
+    titlesPosition = Math.min scrollPosition * @titles.length, @titles.length - 0.00001
+
+    focusedTitleIndex = Math.floor titlesPosition
 
     @focusedTitleView.layout()
     @focusedTitleView.render @titles[focusedTitleIndex]
 
     blindArea = @focusedTitleView.blindArea()
     @filmStripView.setBlindArea blindArea.left, @windowWidth - blindArea.width - blindArea.left
+    @filmStripView.setTitles    @titles
+    @filmStripView.setPosition  titlesPosition if !isNaN titlesPosition
+    @filmStripView.layout()
 
     $.fn.fitTextHeight.fit()
 
@@ -86,4 +92,4 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 , # static members
 
   getInstance: ->
-    @instance || new this
+    @instance ||= new this

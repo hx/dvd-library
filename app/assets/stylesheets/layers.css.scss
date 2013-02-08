@@ -1,0 +1,8 @@
+#background        { z-index: 0  }
+.library           { z-index: 1  ;
+  .film-strip      { z-index: 5  ;
+    .thumbs        { z-index: 10 }
+    .shading       { z-index: 20 }
+  }
+  .focused-title   { z-index: 50 }
+}

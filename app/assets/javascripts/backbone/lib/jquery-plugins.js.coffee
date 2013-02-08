@@ -1,16 +1,19 @@
-$.fn.fitTextHeight = (proportion = 1) ->
+$.fn.fitTextHeight = $.extend (proportion = 1, referencElement = null) ->
 
   callee = arguments.callee
 
-  elements = callee.elements ||= []
-
-  callee.fit ||= ->
-    $.each elements, ->
-      $this = $ this
-      $this.css fontSize: $this.height() * @proportionalHeight
-
   @each ->
     @proportionalHeight = proportion
-    elements.push this if elements.indexOf(this) == -1
+    @proportionReferenceElement = $ referencElement || this
+    @jqueryProxy = $ this
+    callee.elements.push this if callee.elements.indexOf(this) == -1
 
   callee.fit()
+
+, # function members
+
+  fit: ->
+    $.each @elements, ->
+      @jqueryProxy.css fontSize: @proportionReferenceElement.height() * @proportionalHeight if @parentNode
+
+  elements: []

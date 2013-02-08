@@ -1,4 +1,6 @@
-DvdLibrary.Views.FilmStripView = FilmStripView = Backbone.View.extend
+Views = DvdLibrary.Views
+
+Views.FilmStripView = FilmStripView = Backbone.View.extend
 
   tagName: 'div'
 
@@ -6,18 +8,34 @@ DvdLibrary.Views.FilmStripView = FilmStripView = Backbone.View.extend
 
   initialize: ->
     @$el.html FilmStripView.template
-    @leftThumbs  = @$('.thumbs.left')
-    @rightThumbs = @$('.thumbs.right')
+
+    @thumbs =
+      right:  new Views.FilmStripThumbSetView(side: 'right')
+      left:   new Views.FilmStripThumbSetView(side: 'left')
+
+    @$el.append @thumbs.left.el, @thumbs.right.el
 
   render: ->
 
   setTitles: (titles) ->
+    return if @titles == titles
+    @titles = titles
+    @thumbs.right.setTitles titles
+    @thumbs.left.setTitles  titles
 
   setPosition: (position) ->
+    return if @position == position
+    @position = position
+    @thumbs.right.setPosition position
+    @thumbs.left.setPosition  position
 
   setBlindArea: (left, right) ->
-    @leftThumbs.width  left
-    @rightThumbs.width right
+    @thumbs.right.$el.width right
+    @thumbs.left.$el.width  left
+
+  layout: ->
+    @thumbs.right.layout()
+    @thumbs.left.layout()
 
 
 , # static members
@@ -25,7 +43,5 @@ DvdLibrary.Views.FilmStripView = FilmStripView = Backbone.View.extend
   template: '
   <div class="shading top"/>
   <div class="shading bottom"/>
-  <div class="thumbs left"/>
-  <div class="thumbs right"/>
   '
 
