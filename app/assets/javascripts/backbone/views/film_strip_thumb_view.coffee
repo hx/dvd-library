@@ -6,14 +6,14 @@ DvdLibrary.Views.FilmStripThumbView = FilmStripThumbView = Backbone.View.extend
 
   initialize: ->
     unless @model.fetched()
-      @$el.html(FilmStripThumbView.unfetchedTemplate @model.attributes)
-      @$('.unfetched').fitTextHeight .08, @el
+      @el.innerHTML = FilmStripThumbView.unfetchedTemplate @model.attributes
+      $(@el.firstChild).fitTextHeight .08, @el
 
   render: ->
 
   layout: ->
     #todo use image proportions
-    @$el.width @$el.height() / 1.5
+    @el.style.width = (@el.offsetHeight / 1.5) + 'px'
 
 , # static members
 

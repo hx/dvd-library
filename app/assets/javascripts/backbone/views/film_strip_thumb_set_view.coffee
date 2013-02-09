@@ -46,9 +46,9 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
     nextPosition = null
     while thumb = @getThumbViewByDisplayIndex(index++)
       thumb.layout()
-      $el = thumb.$el
-      elementWidth = $el.width() + gap
-      $el.css @align, position = nextPosition || (gap / 2 - elementWidth * (fraction * @increment + @offset))
+      el = thumb.el
+      elementWidth = el.offsetWidth + gap
+      el.style[@align] = (position = nextPosition || (gap - elementWidth * (fraction * @increment + @offset))) + 'px'
       break if position > width
       nextPosition = position + elementWidth
 
@@ -64,13 +64,22 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
 
     return @focusedTitle = focusedTitle if !@focusedTitle?
 
+    #todo accomodate scrolling quickly through large collections
+    # these fail for large collections when doing big jumps. maybe split the logic
+    # to completely re-render if difference above, say, 4 titles?
+
+#    if Math.abs(@focusedTitle - focusedTitle) > 4
+#      @focusedTitle = focusedTitle
+#      @$el.children().detach
+#      return
+
     while (@focusedTitle - focusedTitle) * @increment > 0
       @unshift()
 
     while (@focusedTitle - focusedTitle) * @increment < 0
       @shift()
 
-    null
+    return
 
   unshift: ->
     view = @getThumbViewByTitle @titles[(@focusedTitle -= @increment) + @increment]
@@ -83,12 +92,12 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
   getThumbViewByDisplayIndex: (index = 0) ->
     thumb = @getThumbViewByTitle @titles[@focusedTitle + (index + 1) * @increment]
     if thumb
-      @$el.append thumb.el unless thumb.el.parentNode
+      @el.appendChild thumb.el unless thumb.el.parentNode
       thumb.el.style[@side] = ''
     thumb
 
   getThumbViewByTitle: (title) ->
-    if title then Views.FilmStripThumbView.getInstanceForModel title else null
+    title && Views.FilmStripThumbView.getInstanceForModel title
 
 , # static members
 

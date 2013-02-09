@@ -6,7 +6,7 @@ $.fn.fitTextHeight = $.extend (proportion = 1, referencElement = null) ->
     @proportionalHeight = proportion
     @proportionReferenceElement = $ referencElement || this
     @jqueryProxy = $ this
-    callee.elements.push this if callee.elements.indexOf(this) == -1
+    callee.elements.push this unless this in callee.elements
 
   callee.fit()
 

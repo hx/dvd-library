@@ -38,7 +38,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
       @filmStripView.setTitles titles
 
       # aim to have 10 thumbs on the screen
-      @setScrollWidth (@windowWidth ||= @$el.width()) + @$el.width() * (titles.length - 1) / 10
+      @setScrollWidth (@windowWidth ||= @el.offsetWidth) + @el.offsetWidth * (titles.length - 1) / 10
 
       @layout()
 
@@ -49,7 +49,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
     return unless @titles
 
     scrollPosition = @scrollLeft / (@scrollWidth - @windowWidth)
-    titlesPosition = Math.min scrollPosition * @titles.length, @titles.length - 0.00001
+    titlesPosition = Math.max 0, Math.min scrollPosition * @titles.length, @titles.length - 0.00001
 
     focusedTitleIndex = Math.floor titlesPosition
 
@@ -68,8 +68,8 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
   setupTimers: ->
     metrics = => [
-      @$el.width()
-      @$el.height()
+      @el.offsetWidth
+      @el.offsetHeight
       window.scrollX
       window.scrollY
     ]

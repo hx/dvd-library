@@ -28,7 +28,7 @@ DvdLibrary.Views.FocusedTitleView = FocusedTitleView = Backbone.View.extend
 
   blindArea: ->
     left:  @posterBackground[0].offsetLeft + @posterContainer[0].offsetLeft
-    width: @posterBackground.width()
+    width: @posterBackground[0].offsetWidth
 
 , # static members
 
