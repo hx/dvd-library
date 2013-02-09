@@ -14,6 +14,7 @@ $.fn.fitTextHeight = $.extend (proportion = 1, referencElement = null) ->
 
   fit: ->
     $.each @elements, ->
-      @jqueryProxy.css fontSize: @proportionReferenceElement.height() * @proportionalHeight if @parentNode
+      if @jqueryProxy.parents().last().is 'html'
+        @jqueryProxy.css fontSize: @proportionReferenceElement.height() * @proportionalHeight
 
   elements: []

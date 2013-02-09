@@ -39,7 +39,7 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
     gap   = @$el.height() * 16 / 264
 
     # width of container to populate (go over the edges a smidge)
-    width = @$el.width()  * .7
+    width = @$el.width()  * 1.2
 
     # position thumbs from the center outwards
     index = 0
@@ -48,7 +48,7 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
       thumb.layout()
       $el = thumb.$el
       elementWidth = $el.width() + gap
-      $el.css @align, position = nextPosition || (gap / 2 - elementWidth * fraction * @increment)
+      $el.css @align, position = nextPosition || (gap / 2 - elementWidth * (fraction * @increment + @offset))
       break if position > width
       nextPosition = position + elementWidth
 
@@ -73,7 +73,7 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
     null
 
   unshift: ->
-    view = @getThumbViewByTitle @titles[@focusedTitle -= @increment]
+    view = @getThumbViewByTitle @titles[(@focusedTitle -= @increment) + @increment]
     @$el.prepend view.el
 
   shift: ->
@@ -84,7 +84,7 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
     thumb = @getThumbViewByTitle @titles[@focusedTitle + (index + 1) * @increment]
     if thumb
       @$el.append thumb.el unless thumb.el.parentNode
-      thumb.$el.css @side, ''
+      thumb.el.style[@side] = ''
     thumb
 
   getThumbViewByTitle: (title) ->
@@ -96,8 +96,10 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
     right:
       align:        'left'
       increment:    1
+      offset:       0
 
     left:
       align:        'right'
       increment:    -1
+      offset:       1
 

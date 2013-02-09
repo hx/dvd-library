@@ -11,7 +11,9 @@ DvdLibrary.Views.FocusedTitleView = FocusedTitleView = Backbone.View.extend
     @$('.summary div').fitTextHeight()
 
   render: (model) ->
-
+    return if model == @model
+    @model = model
+    @$('.title-title').text model.get 'title'
 
   layout: ->
     @posterBackground.css DvdLibrary.Helpers.fitBoxWithinBox(
