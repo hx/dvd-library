@@ -19,6 +19,7 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
 
   setTitles: (titles) ->
     if @titles
+      @thumbViewListener.removeAll()
       @$el.children().detach()
 
     @titles = titles
@@ -26,7 +27,7 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
     @layout()
 
   setPosition: (position) ->
-    return unless @titles
+    return unless @titles && @titles.length > 1
 
     @position = position
 

@@ -50,7 +50,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
   layout: (options = {})->
     return unless @titles
 
-    scrollPosition = @scrollLeft / (@scrollWidth - @windowWidth)
+    scrollPosition = @scrollLeft / (@scrollWidth - @windowWidth) || 0
     titlesPosition = Math.max 0, Math.min scrollPosition * @titles.length, @titles.length - 0.00001
 
     focusedTitleIndex = Math.floor titlesPosition
