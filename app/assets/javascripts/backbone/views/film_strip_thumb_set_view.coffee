@@ -58,6 +58,8 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
     while ++index < childCount
       @getThumbViewByDisplayIndex(index).$el.detach()
 
+    @fetchNextTitle()
+
 
   setFocusedTitle: (focusedTitle) ->
     return if @focusedTitle == focusedTitle
@@ -94,6 +96,17 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
 
   getThumbViewByTitle: (title) ->
     title && Views.FilmStripThumbView.getInstanceForModel title
+
+  fetchNextTitle: ->
+    return if @fetching
+    @fetching = true
+    that = this
+    $.each @el.childNodes, (i, node) =>
+      model = node.view.model
+      return  model.fetchAndThen -> that.fetchNextTitle() unless model.fetched() || model.fetching
+    @fetching = false
+
+
 
 , # static members
 

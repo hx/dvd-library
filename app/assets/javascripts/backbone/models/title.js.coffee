@@ -1,20 +1,33 @@
 DvdLibrary.Models.Title = Title = Backbone.Model.extend
 
   initialize: ->
-    @posterElements = []
+    @posterElements =
+      thumb:   null
+      focused: null
     @on 'change:poster', ->
       posterUrl = @posterUrl()
       if posterUrl
-        for i in [0..1]
-          @posterElements[i] = element = document.createElement 'img'
+        for i of @posterElements
+          @posterElements[i] = element = new Image
           element.src = posterUrl
+      return
 
-  fetched: -> @has 'cast'
+  fetched: -> @has 'poster'
 
   fetch: ->
-    return  if @fetched()
+    return  if @fetching || @fetched()
+    @fetching = true
     DvdLibrary.ajax(@url())
       .done _.bind @set, this
+
+  fetchAndThen: (callback) ->
+    return callback() if @fetched()
+    that = this
+    finished = ->
+      that.off 'change', finished
+      callback()
+    @on 'change', finished
+    @fetch()
 
   urlRoot: -> @get('library').url() + '/titles'
 

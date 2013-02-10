@@ -27,7 +27,7 @@ DvdLibrary.Views.FocusedTitleView = FocusedTitleView = Backbone.View.extend
       @labels.director.text if director then 'by ' + director else ''
       cast = DvdLibrary.Helpers.oxfordComma.apply this, model.get 'cast'
       @labels.cast.text if cast then 'with ' + cast else ''
-      poster = @model.posterElements[1]
+      poster = @model.posterElements.focused
       @poster.toggleClass 'missing', !poster
       if poster
         @poster.children().detach()

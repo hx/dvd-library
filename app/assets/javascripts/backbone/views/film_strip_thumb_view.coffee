@@ -5,15 +5,25 @@ DvdLibrary.Views.FilmStripThumbView = FilmStripThumbView = Backbone.View.extend
   className: 'thumb'
 
   initialize: ->
-    unless @model.fetched()
-      @el.innerHTML = FilmStripThumbView.unfetchedTemplate @model.attributes
-      $(@el.firstChild).fitTextHeight .08, @el
+    @el.view = this
+    @aspectRatio = .75
+    @model.on 'change:poster', _.bind @render, this
+    @render()
 
   render: ->
+    poster = @model.posterElements.thumb
+    if poster
+      @el.innerHTML = ''
+      @el.appendChild poster
+      @aspectRatio = @model.posterRatio()
+      @layout()
+    else
+      @el.innerHTML = FilmStripThumbView.posterlessTemplate @model.attributes
+      $(@el.firstChild).fitTextHeight .08, @el
+
 
   layout: ->
-    #todo use image proportions
-    @el.style.width = (@el.offsetHeight / 1.5) + 'px'
+    @el.style.width = (@el.offsetHeight * @aspectRatio) + 'px'
 
 , # static members
 
@@ -22,4 +32,4 @@ DvdLibrary.Views.FilmStripThumbView = FilmStripThumbView = Backbone.View.extend
   getInstanceForModel: (model) ->
     @instances[model.id] ||= new this model: model
 
-  unfetchedTemplate: _.template '<div class="unfetched"><%- title %></div>'
+  posterlessTemplate: _.template '<div class="posterless"><%- title %></div>'
