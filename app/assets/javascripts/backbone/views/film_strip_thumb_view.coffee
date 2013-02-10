@@ -13,17 +13,22 @@ DvdLibrary.Views.FilmStripThumbView = FilmStripThumbView = Backbone.View.extend
   render: ->
     poster = @model.posterElements.thumb
     if poster
-      @el.innerHTML = ''
+      #@el.innerHTML = ''
       @el.appendChild poster
+      oldAspectRatio = @aspectRatio
       @aspectRatio = @model.posterRatio()
       @layout()
+      @trigger 'changeAspectRatio', this if oldAspectRatio != @aspectRatio
     else
       @el.innerHTML = FilmStripThumbView.posterlessTemplate @model.attributes
       $(@el.firstChild).fitTextHeight .08, @el
 
 
   layout: ->
-    @el.style.width = (@el.offsetHeight * @aspectRatio) + 'px'
+    width = Math.round @el.offsetHeight * @aspectRatio
+    return if width == @lastWidth
+    @el.style.width = width + 'px'
+    @lastWidth = width
 
 , # static members
 

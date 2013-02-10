@@ -9,6 +9,7 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
   initialize: (options) ->
     $.extend this, options
     $.extend this, FilmStripThumbSetView.sides[@side]
+    @thumbViewListener = new DvdLibrary.EventDelegate 'changeAspectRatio', _.bind @positionThumbsFromView, this
     @$el.addClass @side
 
   render: ->
@@ -31,35 +32,49 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
 
     @setFocusedTitle focusedTitle = Math.floor position
 
-    # ~0 means barely visible
-    # ~1 means mostly visible
-    fraction = position - focusedTitle
-
-    # gap between thumbnails
-    gap   = @$el.height() * 16 / 264
-
-    # width of container to populate (go over the edges a smidge)
-    width = @$el.width()  * 1.2
-
-    # position thumbs from the center outwards
-    index = 0
-    nextPosition = null
-    while thumb = @getThumbViewByDisplayIndex(index++)
-      thumb.layout()
-      el = thumb.el
-      elementWidth = el.offsetWidth + gap
-      el.style[@align] = (position = nextPosition || (gap - elementWidth * (fraction * @increment + @offset))) + 'px'
-      break if position > width
-      nextPosition = position + elementWidth
+    expectedChildCount = @positionThumbs()
 
     childCount = @el.childNodes.length
 
     # remove any excess views from far edge
-    while ++index < childCount
-      @getThumbViewByDisplayIndex(index).$el.detach()
+    while ++expectedChildCount < childCount
+      view = @getThumbViewByDisplayIndex(expectedChildCount)
+      @thumbViewListener.remove view
+      view.$el.detach()
 
     @fetchNextTitle()
 
+  positionThumbs: (index = 0) ->
+    # ~0 means barely visible
+    # ~1 means mostly visible
+    fraction = @position - @focusedTitle
+
+    # gap between thumbnails
+    gap   = @el.offsetHeight * 16 / 264
+
+    # width of container to populate (go over the edges a smidge)
+    width = @el.offsetWidth  * 1.5
+
+    # position thumbs from the center outwards
+    nextPosition = if index == 0 then null else
+      previousView = @getThumbViewByDisplayIndex(index - 1)
+      parseFloat(previousView.el.style[@align]) + previousView.el.offsetWidth + gap
+
+    while thumb = @getThumbViewByDisplayIndex(index++)
+      thumb.layout()
+      el = thumb.el
+      elementWidth = el.offsetWidth + gap
+      el.style[@align] = (position = nextPosition || (gap  - elementWidth * (fraction * @increment + @offset))) + 'px'
+      break if position > width
+      nextPosition = position + elementWidth
+
+    index
+
+  positionThumbsFromView: (view) ->
+    index = 0
+    childNodes = @el.childNodes
+    while node = childNodes[index++]
+      return @positionThumbs index if node == view.el
 
   setFocusedTitle: (focusedTitle) ->
     return if @focusedTitle == focusedTitle
@@ -68,6 +83,7 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
 
     if Math.abs(@focusedTitle - focusedTitle) > @el.childNodes.length
       @focusedTitle = focusedTitle
+      @thumbViewListener.removeAll()
       @$el.children().detach()
       return
 
@@ -82,17 +98,21 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
   unshift: ->
     view = @getThumbViewByTitle @titles[(@focusedTitle -= @increment) + @increment]
     @$el.prepend view.el
+    @thumbViewListener.add view
 
   shift: ->
     view = @getThumbViewByTitle @titles[@focusedTitle += @increment]
     view.$el.detach()
+    @thumbViewListener.remove view
 
   getThumbViewByDisplayIndex: (index = 0) ->
-    thumb = @getThumbViewByTitle @titles[@focusedTitle + (index + 1) * @increment]
-    if thumb
-      @el.appendChild thumb.el unless thumb.el.parentNode
-      thumb.el.style[@side] = ''
-    thumb
+    view = @getThumbViewByTitle @titles[@focusedTitle + (index + 1) * @increment]
+    if view
+      view.el.style[@side] = ''
+      unless view.el.parentNode
+        @el.appendChild view.el
+        @thumbViewListener.add view
+    view
 
   getThumbViewByTitle: (title) ->
     title && Views.FilmStripThumbView.getInstanceForModel title

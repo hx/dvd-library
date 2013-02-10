@@ -90,6 +90,9 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
     , 30
 
+    @scrollLeft = lastScrollLeft
+    @windowWidth = lastWidth
+
 , # static members
 
   getInstance: ->
