@@ -26,6 +26,7 @@ class Role < ActiveRecord::Base
   belongs_to :title
   belongs_to :person
 
-  scope :cast, where(department: 'Cast')
+  scope :cast,      where(department: 'Cast')
+  scope :direction, where(department: 'Direction')
 
 end

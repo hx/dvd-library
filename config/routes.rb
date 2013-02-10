@@ -53,6 +53,7 @@ DvdLibrary::Application.routes.draw do
   get 'tests', to: 'Qunit#show'
 
   resources :libraries, only: :index do
+    resources :titles, only: :show
     get 'titles(/*scope)', to: 'Titles#index'
   end
 

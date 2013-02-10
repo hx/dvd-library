@@ -25,4 +25,8 @@ class Person < ActiveRecord::Base
   has_many :roles, include: :title
   has_many :titles, through: :roles
 
+  def full_name
+    [first_name, middle_name, last_name].select{ |name| !name.blank? }.join ' '
+  end
+
 end

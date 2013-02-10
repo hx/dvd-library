@@ -3,6 +3,7 @@ require 'open-uri'
 class Poster
 
   STORE = File.join Rails.root, 'public/posters'
+  URI = '/posters/%s.jpg'
 
   def log(*args)
     Rails.logger.debug *args
@@ -53,11 +54,19 @@ class Poster
   end
 
   def path
-    exists? ? expected_path : nil
+    expected_path if exists?
   end
 
   def exists?
     File.exists? expected_path
+  end
+
+  def dimensions
+    FastImage.size path if exists?
+  end
+
+  def uri
+    @uri ||= URI % title.vendor_id if exists?
   end
 
   def download(async = false)

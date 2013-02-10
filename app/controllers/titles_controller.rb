@@ -1,4 +1,5 @@
 class TitlesController < ApplicationController
+
   def index
     library = Library.find_by_id(params[:library_id])
     respond_to do |format|
@@ -14,4 +15,14 @@ class TitlesController < ApplicationController
       end
     end
   end
+
+  def show
+    respond_to do |format|
+      format.json do
+        library = Library.find_by_id params[:library_id]
+        @title = library.titles.find_by_id params[:id]
+      end
+    end
+  end
+
 end

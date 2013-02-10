@@ -10,6 +10,7 @@ gem 'nokogiri'
 gem 'pg'
 gem 'closure_tree'
 gem 'ruby-tmdb3'
+gem 'fastimage'
 
 group :test, :development do
   gem 'capybara'
