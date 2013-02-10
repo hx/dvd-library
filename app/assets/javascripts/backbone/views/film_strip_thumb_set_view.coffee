@@ -64,14 +64,10 @@ Views.FilmStripThumbSetView = FilmStripThumbSetView = Backbone.View.extend
 
     return @focusedTitle = focusedTitle if !@focusedTitle?
 
-    #todo accomodate scrolling quickly through large collections
-    # these fail for large collections when doing big jumps. maybe split the logic
-    # to completely re-render if difference above, say, 4 titles?
-
-#    if Math.abs(@focusedTitle - focusedTitle) > 4
-#      @focusedTitle = focusedTitle
-#      @$el.children().detach
-#      return
+    if Math.abs(@focusedTitle - focusedTitle) > @el.childNodes.length
+      @focusedTitle = focusedTitle
+      @$el.children().detach()
+      return
 
     while (@focusedTitle - focusedTitle) * @increment > 0
       @unshift()
