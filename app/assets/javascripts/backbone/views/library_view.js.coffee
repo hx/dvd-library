@@ -23,6 +23,8 @@ Views.LibraryView = LibraryView = Backbone.View.extend
       @scrollLeft = scrollLeft
       @layout()
 
+    @focusedTitleView.on 'changeAspectRatio', => @layout skip: 'focusedTitle'
+
     @render if @model
 
   render: (newScopeSet) ->
@@ -45,7 +47,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
   setScrollWidth: (width) ->
     @widthSetter.width @scrollWidth = width
 
-  layout: ->
+  layout: (options = {})->
     return unless @titles
 
     scrollPosition = @scrollLeft / (@scrollWidth - @windowWidth)
@@ -53,8 +55,9 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
     focusedTitleIndex = Math.floor titlesPosition
 
-    @focusedTitleView.layout()
-    @focusedTitleView.render @titles[focusedTitleIndex]
+    unless options.skip == 'focusedTitle'
+      @focusedTitleView.layout()
+      @focusedTitleView.render @titles[focusedTitleIndex]
 
     blindArea = @focusedTitleView.blindArea()
     @filmStripView.setBlindArea blindArea.left, @windowWidth - blindArea.width - blindArea.left

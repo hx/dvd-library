@@ -12,3 +12,11 @@ DvdLibrary.Helpers =
       width:  width  = innerWidth/innerHeight * height
       top:    0
       left:   outerWidth/2 - width/2
+
+  oxfordComma: ->
+    args = Array.prototype.slice.apply arguments
+    switch args.length
+      when 0 then ''
+      when 1 then args[0]
+      when 2 then args[0] + ' and ' + args[1]
+      else args[0..-2].join(', ') + ', and ' + args[-1..-1][0]

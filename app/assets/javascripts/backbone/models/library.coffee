@@ -1,19 +1,20 @@
 DvdLibrary.Models.Library = Library = Backbone.Model.extend
 
-  initialize: ->
-
   getTitlesForScopes: (scopes, callback) ->
+    library = this
     scopes = scopes.toString()
     scopeCache = @scopeCache ||= {}
     if scopeCache[scopes]
-      return if callback then callback(scopeCache[scopes]) else this
-    path = "libraries/#{@id}/titles"
+      return if callback then callback(scopeCache[scopes]) else library
+    path = @url() + '/titles'
     path += '/' + scopes if scopes.length
     DvdLibrary.ajax(path)
       .done (response) ->
-        scopeCache[scopes] = $.map response, (title_id) -> DvdLibrary.Models.Title.getInstanceById title_id
+        scopeCache[scopes] = $.map response, (title_id) -> DvdLibrary.Models.Title.getInstanceById(title_id).set(library: library)
         callback scopeCache[scopes] if callback
-    this
+    library
+
+  urlRoot: 'libraries'
 
 , # static methods
 

@@ -1,9 +1,29 @@
 DvdLibrary.Models.Title = Title = Backbone.Model.extend
 
   initialize: ->
-    null
+    @posterElements = []
+    @on 'change:poster', ->
+      posterUrl = @posterUrl()
+      if posterUrl
+        for i in [0..1]
+          @posterElements[i] = element = document.createElement 'img'
+          element.src = posterUrl
 
-  fetched: -> @has 'barcode'
+  fetched: -> @has 'cast'
+
+  fetch: ->
+    return  if @fetched()
+    DvdLibrary.ajax(@url())
+      .done _.bind @set, this
+
+  urlRoot: -> @get('library').url() + '/titles'
+
+  posterRatio: ->
+   size = @get('poster')?.size
+   size && (size[0] / size[1])
+
+  posterUrl: -> @get('poster')?.path
+
 
 , # static members
 
