@@ -2,13 +2,14 @@ DvdLibrary.Views.SearchIconView = SearchIconView = Backbone.View.extend
 
   tagName: 'div'
 
-  className: 'search-icon'
+  className: 'icon'
 
   initialize: ->
     $('<img>', src: 'data:image/svg+xml,' + escape SearchIconView.graphic)
       .appendTo @el
 
-  render: ->
+  layout: ->
+    @$el.width @el.offsetHeight
 
 , # static members
 

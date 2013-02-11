@@ -10,6 +10,8 @@ $.fn.fitTextHeight = $.extend (proportion = 1, referencElement = null) ->
 
   callee.fit()
 
+  this
+
 , # function members
 
   fit: ->

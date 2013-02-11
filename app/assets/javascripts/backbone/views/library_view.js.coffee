@@ -14,6 +14,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
     @$el.appendTo('body')
       .append((@filmStripView = new Views.FilmStripView).el)
       .append((@focusedTitleView = new Views.FocusedTitleView).el)
+      .append((@searchView = new Views.SearchView).el)
 
     @on 'resize', (width) ->
       @windowWidth = width
@@ -48,6 +49,8 @@ Views.LibraryView = LibraryView = Backbone.View.extend
     @widthSetter.width @scrollWidth = width
 
   layout: (options = {})->
+    @searchView.layout @el.offsetWidth, @el.offsetHeight
+
     return unless @titles
 
     scrollPosition = @scrollLeft / (@scrollWidth - @windowWidth) || 0
