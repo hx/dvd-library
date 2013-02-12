@@ -46,24 +46,58 @@
       height: 60%;
       line-height: 1em;
       left: 100%;
+      opacity: 1;
       @include text-shadow(0 2px 8px rgba(0, 0, 0, .4));
-      @include transition-property(left);
+      @include transition-property(left, opacity);
       @include transition-duration(200ms);
     }
 
-    &:hover {
+    input {
+      position: absolute;
+      top: 0;
+      background: none;
+      border: none;
+      outline: none;
+      opacity: 0;
+      color: inherit;
+      padding-top: .4em;
+      line-height: 1em;
+      @include transition-property(opacity);
+      @include transition-duration(200ms);
+    }
+
+    @mixin visible {
       background-color: rgba(0, 0, 0, .1);
       @include box-shadow(inset 0 0 20px rgba(0, 0, 0, .3));
-      width: 35%;
-      @include transition-timing-function(cubic-bezier(0.175, 0.885, 0.32, 1.275));
 
       .icon {
         opacity: .3;
       }
+    }
+
+    &:hover {
+      @include visible;
+      width: 35%;
+      @include transition-timing-function(cubic-bezier(0.175, 0.885, 0.32, 1.275));
 
       .placeholder {
         left: 0;
       }
+
+    }
+
+    &.focused {
+      @include visible;
+      width: 85%;
+
+      .placeholder {
+        opacity: 0;
+      }
+
+      input {
+        opacity: 1;
+      }
+
     }
 
   }
