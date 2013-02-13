@@ -1,4 +1,0 @@
-<%= raw({ cast: @title.roles.cast.limit(3).map      { |role| role.person.full_name },
-      director: @title.roles.direction.limit(1).map { |role| role.person.full_name }.join(''),
-        poster: { size: @title.poster.dimensions, path: @title.poster.uri }
-}.to_json) %>

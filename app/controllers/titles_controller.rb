@@ -26,7 +26,15 @@ class TitlesController < ApplicationController
     respond_to do |format|
       format.json do
         library = Library.find_by_id params[:library_id]
-        @title = library.titles.find_by_id params[:id]
+        title = library.titles.find_by_id params[:id]
+        render text: {
+          cast:     title.roles.cast.limit(3).map      { |role| role.person.full_name },
+          director: title.roles.direction.limit(1).map { |role| role.person.full_name }.join(''),
+          poster: {
+            size: title.poster.dimensions,
+            path: title.poster.uri
+          }
+        }.to_json
       end
     end
   end
