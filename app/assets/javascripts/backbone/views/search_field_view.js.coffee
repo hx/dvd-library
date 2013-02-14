@@ -44,6 +44,7 @@ DvdLibrary.Views.SearchFieldView = SearchFieldView = Backbone.View.extend
 
   key: (event) ->
     switch event.keyCode
-      when KeyEvent.DOM_VK_UP   then @trigger 'select:previous'
-      when KeyEvent.DOM_VK_DOWN then @trigger 'select:next'
-    return
+      when KeyEvent.DOM_VK_UP   then @trigger 'moveFocus', -1
+      when KeyEvent.DOM_VK_DOWN then @trigger 'moveFocus', 1
+      else return
+    event.preventDefault()

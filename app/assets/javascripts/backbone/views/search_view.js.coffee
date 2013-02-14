@@ -16,13 +16,14 @@ Views.SearchView = SearchView = Backbone.View.extend
     @el.appendChild (@suggestions = new Views.SearchSuggestionsView).el
 
     @searchField.on 'change', _.bind @changeInput, this
+    @searchField.on 'moveFocus', _.bind @moveFocus, this
 
     @searchFor = null
     @searchTimeout = null
 
   changeInput: (newValue, force) ->
     return @searchFor = newValue if @searchFor? && !force
-    @suggestions.render
+    @suggestions.render()
     @searchFor = newValue
     clearTimeout @searchTimeout if @searchTimeout
     @searchTimeout = setTimeout =>
@@ -39,4 +40,5 @@ Views.SearchView = SearchView = Backbone.View.extend
     @searchField.layout fieldHeight
     @suggestions.layout width, fieldHeight
 
-
+  moveFocus: (amount) ->
+    @suggestions.shiftFocusByOffset amount

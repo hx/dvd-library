@@ -4,6 +4,7 @@ labels =
   'production-year':  'Produced'
 
 template = _.template """
+  <div class="background">&#160;</div>
   <div class="value"><%= value %></div>
   <div class="label"><%= label %></div>
   <div class="clearFloats">&#160;</div>
@@ -71,4 +72,5 @@ DvdLibrary.Views.SearchSuggestionView = SearchSuggestionView = Backbone.View.ext
 
     @el.innerHTML = template x
 
-  render: ->
+  focus: (focused) ->
+    @$el.toggleClass 'focused', !!focused
