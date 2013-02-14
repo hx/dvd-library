@@ -1,3 +1,5 @@
+instances = {}
+
 Views = DvdLibrary.Views
 
 Views.LibraryView = LibraryView = Backbone.View.extend
@@ -14,7 +16,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
     @$el.appendTo('body')
       .append((@filmStripView = new Views.FilmStripView).el)
       .append((@focusedTitleView = new Views.FocusedTitleView).el)
-      .append((@searchView = new Views.SearchView).el)
+      .append((@searchView = new Views.SearchView library: @model).el)
 
     @on 'resize', (width) ->
       @windowWidth = width
@@ -98,5 +100,5 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
 , # static members
 
-  getInstance: ->
-    @instance ||= new this
+  getInstanceForModel: (model) ->
+    instances[model.id] ||= new this model: model

@@ -10,6 +10,9 @@ DvdLibrary.TitleScopeSet = class TitleScopeSet
 
   toString: -> @scopes.join '/'
 
+  byType: (type) ->
+    $.grep @scopes, (scope) -> scope.type == type
+
 patterns = [
   pattern: '(r)?sort/(title|release-date|production-year|genre|media-type|runtime|certification)'
   factory: (reverse, field) -> new TitleSortingScope field, reverse
@@ -60,16 +63,23 @@ DvdLibrary.TitleSortingScope = class TitleSortingScope extends TitleScope
 
   toString: -> (if @reverse then 'r' else '') + 'sort/' + @criteria
 
+  type: 'sort'
+
 DvdLibrary.TitleFilterScope = class TitleFilterScope extends TitleScope
 
   constructor: (@property, @value) ->
+    @type = 'person' if property == 'person'
 
   toString: -> @property + '/' + @value
+
+  type: 'filter'
 
 DvdLibrary.TitleSearchScope = class TitleSearchScope extends TitleFilterScope
 
   constructor: (@value) ->
     @property = 'search'
+
+  type: 'search'
 
 DvdLibrary.TitleRuntimeScope = class TitleRuntimeScope extends TitleFilterScope
 

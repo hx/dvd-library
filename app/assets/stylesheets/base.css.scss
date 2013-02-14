@@ -4,3 +4,9 @@
   @include fullscreen;
   z-index: 0;
 }
+
+.clearFloats {
+  clear: both;
+  overflow: hidden;
+  height: 0;
+}

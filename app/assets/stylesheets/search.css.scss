@@ -3,7 +3,7 @@
 @import "compass/css3/border-radius";
 @import "compass/css3/transition";
 
-.search {
+.library > .search {
   position: absolute;
   right: 0;
   top: 6.6%;
@@ -77,7 +77,7 @@
 
     &:hover {
       @include visible;
-      width: 35%;
+      width: 40%;
       @include transition-timing-function(cubic-bezier(0.175, 0.885, 0.32, 1.275));
 
       .placeholder {
@@ -88,7 +88,7 @@
 
     &.focused {
       @include visible;
-      width: 85%;
+      width: 100%;
 
       .placeholder {
         opacity: 0;
@@ -100,5 +100,36 @@
 
     }
 
+  }
+
+  .suggestions {
+    position: absolute;
+    background: rgba(0, 0, 0, .8);
+
+    .type {
+      border-top: 1px solid #c9c9c9;
+
+      &:first-child {
+        border-top: none;
+      }
+
+      .suggestion {
+
+        div.value {
+          float: left;
+          color: #ddd;
+        }
+
+        .label {
+          float: right;
+          font-style: italic;
+          font-size: .84em;
+          padding-top: .2em;
+          color: #4c4c4c;
+        }
+
+
+      }
+    }
   }
 }

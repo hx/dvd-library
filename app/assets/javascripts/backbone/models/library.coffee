@@ -21,7 +21,7 @@ DvdLibrary.Models.Library = Library = Backbone.Model.extend
     return callback searchCache[term] if searchCache[term]
     DvdLibrary.ajax(@url() + '/search', query: term)
       .done (response) ->
-        $.extend DvdLibrary.Models.index, response.people if response.people
+        $.extend DvdLibrary.Models.index.person, response.people if response.people
         callback searchCache[term] = new DvdLibrary.TitleScopeSet response.scopes
 
   urlRoot: 'libraries'

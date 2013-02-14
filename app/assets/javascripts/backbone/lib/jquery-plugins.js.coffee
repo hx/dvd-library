@@ -20,3 +20,6 @@ $.fn.fitTextHeight = $.extend (proportion = 1, referencElement = null) ->
         @jqueryProxy.css fontSize: @proportionReferenceElement.height() * @proportionalHeight
 
   elements: []
+
+$.capitalize = (text) ->
+  text.replace /(^|[^a-z])([a-z])/gi, (all, space, letter) -> (space && ' ') + letter.toUpperCase()

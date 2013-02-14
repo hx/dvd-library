@@ -34,3 +34,12 @@ for i in [1..2]
       scope = new DvdLibrary.TitleScopeSet path
       equal scope.toString(), path, "'#{path}' should be a vaild scope"
       equal scope.scopes.length, x, "... and should have #{x} scope(s)"
+
+test 'Division of scopes by type', ->
+  scopes = new DvdLibrary.TitleScopeSet 'search/foo/sort/genre/rsort/title/person/2/studio/1/media-type/3/release-date-lt/2002-01-01'
+  equal scopes.byType('search').length, 1, 'There should be 1 search scope'
+  equal scopes.byType('sort').length,   2, 'There should be 2 sort scopes'
+  equal scopes.byType('person').length, 1, 'There should be 2 person scope'
+  equal scopes.byType('filter').length, 3, 'There should be 3 filter scopes'
+
+

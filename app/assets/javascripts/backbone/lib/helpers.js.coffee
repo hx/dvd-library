@@ -20,3 +20,18 @@ DvdLibrary.Helpers =
       when 1 then args[0]
       when 2 then args[0] + ' and ' + args[1]
       else args[0..-2].join(', ') + ', and ' + args[-1..-1][0]
+
+  months: $.trim("""
+    January
+    February
+    March
+    April
+    May
+    June
+    July
+    August
+    September
+    October
+    November
+    December
+  """).split /\s+/

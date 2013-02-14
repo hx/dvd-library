@@ -4,9 +4,9 @@ class TitlesController < ApplicationController
     library = Library.find_by_id(params[:library_id])
     respond_to do |format|
       format.html do
-        @models = {people: {}}
+        @models = {person: {}}
         [MediaType, Genre, Studio].each do |klass|
-          @models[klass.name.underscore.pluralize.to_sym] = Hash[klass.all.map do |record|
+          @models[klass.name.underscore.gsub('_', '-').to_sym] = Hash[klass.all.map do |record|
             [record.id, record.name]
           end]
         end
