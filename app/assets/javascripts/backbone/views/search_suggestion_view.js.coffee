@@ -33,22 +33,22 @@ DvdLibrary.Views.SearchSuggestionView = SearchSuggestionView = Backbone.View.ext
     'mouseover .comparison span': 'setPhaseByEvent'
 
   initialize: ->
-    if @model instanceof DvdLibrary.TitleSortingScope
+    if @model.type == 'sort'
       x =
         value: "Sort by by #{$.capitalize @model.criteria}"
         label: 'Sort'
 
-    else if @model instanceof DvdLibrary.TitleRuntimeScope
+    else if @model.property == 'runtime'
       x =
         value: "Between #{@model.min} and #{@model.max} minutes"
         label: 'Runtime'
 
-    else if @model instanceof DvdLibrary.TitleSearchScope
+    else if @model.type == 'search'
       x =
-        value: _.escape "Titles containing “#{@model.value}”"
+        value: _.escape "Titles containing “#{@model.term}”"
         label: 'Search'
 
-    else if @model instanceof DvdLibrary.TitleDateScope
+    else if @model.comparison? && @model.value instanceof Date
       date = @model.value
       x =
         preposition: 'on'
@@ -58,16 +58,19 @@ DvdLibrary.Views.SearchSuggestionView = SearchSuggestionView = Backbone.View.ext
             date.getFullYear()
           ].join ' '
 
-    else if @model instanceof DvdLibrary.TitleComparisonScope
+    else if @model.comparison?
       x =
         preposition: 'in'
 
-    else if @model instanceof DvdLibrary.TitleFilterScope
+    else if @model.type == 'filter'
       x =
         value: DvdLibrary.Models.index[@model.property][@model.value]
-      if @model.type == 'person'
-        x.label = x.value.recent_role
-        x.value = x.value.full_name
+
+    else if @model.type == 'person'
+      value = DvdLibrary.Models.index[@model.property][@model.value]
+      x =
+        label: value.recent_role
+        value: value.full_name
 
     else x = {}
 
