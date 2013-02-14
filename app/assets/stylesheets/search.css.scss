@@ -147,6 +147,19 @@
         div.value {
           float: left;
           color: #ddd;
+
+          .comparison {
+            color:  #949494;
+            @include transition-property(color);
+            @include transition-duration(500ms);
+
+            &.lt .lt, &.lte .e, &.lte .lte, &.lte .lt,
+            &.gt .gt, &.gte .e, &.gte .gte, &.gte .gt,
+            &.e .e {
+              color: #ddd;
+            }
+          }
+
         }
 
         .label {
@@ -159,6 +172,8 @@
           @include transition-duration(500ms);
         }
 
+
+
         &.focused {
 
           div.background {
@@ -169,6 +184,10 @@
           .label {
             color: #d5d5d5;
             @include transition-duration(200ms);
+          }
+
+          div.value .comparison {
+            color: #5d7ca1;
           }
         }
 

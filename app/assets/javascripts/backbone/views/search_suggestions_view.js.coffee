@@ -6,6 +6,7 @@ DvdLibrary.Views.SearchSuggestionsView = SearchSuggestionsView = Backbone.View.e
 
   events:
     'mouseover .suggestion': 'giveFocusByEvent'
+    'mousedown .suggestion': 'selectByEvent'
 
   initialize: ->
     @list = @$el
@@ -48,6 +49,14 @@ DvdLibrary.Views.SearchSuggestionsView = SearchSuggestionsView = Backbone.View.e
     i -= count if i >= count
     @giveFocusByIndex i
 
+  shiftPhaseByOffset: (offset) ->
+    return false unless @focusedIndex?
+    focusedView = @suggestionViews[@focusedIndex]
+    return false unless focusedView.comparison?
+    return focusedView.phase != focusedView.shiftPhaseByOffset offset
+
+  blur: -> @render()
+
   render: (scopeSet) ->
     @$el.addClass 'empty'
     @suggestionViews = []
@@ -67,3 +76,11 @@ DvdLibrary.Views.SearchSuggestionsView = SearchSuggestionsView = Backbone.View.e
     @layoutChildren()
     @$el.removeClass 'empty'
 
+  selectFocused: ->
+    @select @suggestionViews[@focusedIndex].model if @focusedIndex?
+
+  selectByEvent: (event) ->
+    @select @suggestionViews[event.currentTarget.contextIndex].model
+
+  select: (model) ->
+    @trigger 'select', model

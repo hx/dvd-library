@@ -11,20 +11,26 @@ template = _.template """
   """
 
 comparisonTemplate = _.template """
-  <span class="comparision">
+  <span class="comparison">
     <span class="lt">Before</span>
-    <span class="lt e">or</span>
+    <span class="lte">or</span>
     <span class="e"><%= preposition %></span>
-    <span class="gt e">or</span>
+    <span class="gte">or</span>
     <span class="gt">after</span>
   </span>
   <span class="value"><%= value %></span>
   """
+
+phases = ['lt', 'lte', 'e', 'gte', 'gt']
+
 DvdLibrary.Views.SearchSuggestionView = SearchSuggestionView = Backbone.View.extend
 
   tagName: 'div'
 
   className: 'suggestion'
+
+  events:
+    'mouseover .comparison span': 'setPhaseByEvent'
 
   initialize: ->
     if @model instanceof DvdLibrary.TitleSortingScope
@@ -65,12 +71,30 @@ DvdLibrary.Views.SearchSuggestionView = SearchSuggestionView = Backbone.View.ext
 
     else x = {}
 
-
     x.label ||= labels[@model.property] || $.capitalize @model.property
     x.value ||= _.escape @model.value
     x.value = comparisonTemplate x if x.preposition
 
     @el.innerHTML = template x
 
+    if x.preposition
+      @comparison = @$ '.comparison'
+      @setPhaseByIndex 2
+
   focus: (focused) ->
     @$el.toggleClass 'focused', !!focused
+
+  setPhaseByIndex: (index) ->
+    index = Math.max 0, Math.min 4, index
+    @phase = index
+    @model.comparision = phases[@phase].replace /^e/, ''
+    $.each phases, (i, phase) => @comparison.toggleClass phase, i == index
+    index
+
+  setPhaseByName: (name) ->
+    @setPhaseByIndex _.indexOf phases, name
+
+  setPhaseByEvent: (event) ->
+    @setPhaseByName event.currentTarget.className
+
+  shiftPhaseByOffset: (offset) -> @setPhaseByIndex @phase + offset

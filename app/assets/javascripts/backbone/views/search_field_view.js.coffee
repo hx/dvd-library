@@ -34,7 +34,8 @@ DvdLibrary.Views.SearchFieldView = SearchFieldView = Backbone.View.extend
     return if @bluring
     @bluring = true
     @$el.removeClass 'focused'
-    @input.blur()
+    @input.blur().val ''
+    @trigger 'blur'
     @bluring = false
 
   change: ->
@@ -43,8 +44,22 @@ DvdLibrary.Views.SearchFieldView = SearchFieldView = Backbone.View.extend
     @trigger 'change', @lastValue = value
 
   key: (event) ->
-    switch event.keyCode
-      when KeyEvent.DOM_VK_UP   then @trigger 'moveFocus', -1
-      when KeyEvent.DOM_VK_DOWN then @trigger 'moveFocus', 1
-      else return
-    event.preventDefault()
+    return if event.ctrlKey || event.shiftKey || event.altKey || event.metaKey
+
+    keyCode = event.keyCode
+    codes = KeyEvent
+
+    if keyCode == codes.DOM_VK_RETURN
+      @trigger 'select'
+
+    else if keyCode == codes.DOM_VK_ESCAPE
+      @blur()
+
+    else if keyCode in [codes.DOM_VK_UP, codes.DOM_VK_DOWN]
+      @trigger 'moveFocus', if keyCode == codes.DOM_VK_UP then -1 else 1
+      event.preventDefault()
+
+    else if keyCode in [codes.DOM_VK_LEFT, codes.DOM_VK_RIGHT]
+      @trigger 'changePhase', (if keyCode == codes.DOM_VK_LEFT then -1 else 1), event
+
+    return

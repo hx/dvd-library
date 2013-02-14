@@ -15,15 +15,20 @@ Views.SearchView = SearchView = Backbone.View.extend
     @el.appendChild (@searchField = new Views.SearchFieldView).el
     @el.appendChild (@suggestions = new Views.SearchSuggestionsView).el
 
-    @searchField.on 'change', _.bind @changeInput, this
-    @searchField.on 'moveFocus', _.bind @moveFocus, this
+    @searchField.on 'change',       _.bind @changeInput, this
+    @searchField.on 'moveFocus',    _.bind @moveFocus, this
+    @searchField.on 'changePhase',  _.bind @changePhase, this
+    @searchField.on 'select',       _.bind @selectFocused, this
+    @searchField.on 'blur',         _.bind @blurSuggestions, this
+
+    @suggestions.on 'select',       _.bind @selectByScope, this
 
     @searchFor = null
     @searchTimeout = null
 
   changeInput: (newValue, force) ->
     return @searchFor = newValue if @searchFor? && !force
-    @suggestions.render()
+    @suggestions.blur()
     @searchFor = newValue
     clearTimeout @searchTimeout if @searchTimeout
     @searchTimeout = setTimeout =>
@@ -42,3 +47,16 @@ Views.SearchView = SearchView = Backbone.View.extend
 
   moveFocus: (amount) ->
     @suggestions.shiftFocusByOffset amount
+
+  changePhase: (offset, event) ->
+    event.preventDefault() if @suggestions.shiftPhaseByOffset offset
+
+  selectFocused: ->
+    @suggestions.selectFocused()
+
+  selectByScope: (scope) ->
+    @searchField.blur()
+    @trigger 'selectScope', scope
+
+  blurSuggestions: ->
+    @suggestions.blur()
