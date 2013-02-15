@@ -46,7 +46,7 @@ class Person < ActiveRecord::Base
 
   def recent_work
     role = roles.joins(:title).order('release_date DESC').first
-    role.job + ', ' + role.title.title
+    "#{role.job}, #{role.title.title}"
   end
 
   private
