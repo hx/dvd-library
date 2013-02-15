@@ -12,6 +12,8 @@ class Genre < ActiveRecord::Base
 
   xml_importer { map '.', to: :name, key: true }
 
+  extend FindByPartialName
+
   attr_accessible :name
 
   has_many :title_genres, include: :title, dependent: :delete_all

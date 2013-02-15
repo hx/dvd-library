@@ -53,7 +53,13 @@ class Title < ActiveRecord::Base
 
   default_scope order 'sort_title'
 
-  scope :top_level, where(parent_id: nil)
+  def self.all_certifications
+    @all_certifications ||= unscoped
+      .select(:certification)
+      .group(:certification)
+      .map(&:certification)
+      .select(&:present?)
+  end
 
   belongs_to :library
 

@@ -22,11 +22,36 @@ class Person < ActiveRecord::Base
 
   attr_accessible :birth_year, :first_name, :last_name, :middle_name
 
+  before_save :populate_search_name
+
   has_many :roles, include: :title
   has_many :titles, through: :roles
 
-  def full_name
-    [first_name, middle_name, last_name].select{ |name| !name.blank? }.join ' '
+  extend FindByPartialName
+
+  class << self
+    alias_method :original_find_by_partial_name, :find_by_partial_name
   end
+
+  #noinspection RailsChecklist04
+  def self.find_by_partial_name(term, limit = nil)
+    #noinspection RubyArgCount
+    original_find_by_partial_name term.downcase.gsub(/[^a-z]/, ''), limit, :search_name
+  end
+
+  def full_name
+    [first_name, middle_name, last_name].select(&:present?).join ' '
+  end
+
+  def recent_work
+    role = roles.joins(:title).order('release_date DESC').first
+    role.job + ', ' + role.title.title
+  end
+
+  private
+
+    def populate_search_name
+      self.search_name = (first_name + middle_name + last_name + first_name).downcase.gsub(/[^a-z]/, '')
+    end
 
 end

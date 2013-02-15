@@ -14,6 +14,8 @@ class MediaType < ActiveRecord::Base
     map '.', to: :name, key: true, value: lambda { |element| Rails.logger.debug(element); element.name }
   end
 
+  extend FindByPartialName
+
   attr_accessible :name
 
   has_many :title_media_types, include: :title, dependent: :delete_all

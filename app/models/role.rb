@@ -29,4 +29,8 @@ class Role < ActiveRecord::Base
   scope :cast,      where(department: 'Cast')
   scope :direction, where(department: 'Direction')
 
+  def job
+    department == 'Cast' ? 'Actor' : name
+  end
+
 end

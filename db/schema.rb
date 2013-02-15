@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130207033455) do
+ActiveRecord::Schema.define(:version => 20130215025110) do
 
   create_table "genres", :force => true do |t|
     t.string   "name"
@@ -41,9 +41,11 @@ ActiveRecord::Schema.define(:version => 20130207033455) do
     t.integer  "birth_year"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.string   "search_name"
   end
 
   add_index "people", ["first_name", "middle_name", "last_name", "birth_year"], :name => "index_people_on_everything", :unique => true
+  add_index "people", ["search_name"], :name => "index_people_on_search_name"
 
   create_table "roles", :force => true do |t|
     t.integer  "title_id"
@@ -120,6 +122,7 @@ ActiveRecord::Schema.define(:version => 20130207033455) do
   end
 
   add_index "titles", ["barcode"], :name => "index_titles_on_barcode"
+  add_index "titles", ["certification"], :name => "index_titles_on_certification"
   add_index "titles", ["vendor_id"], :name => "index_titles_on_vendor_id"
 
 end

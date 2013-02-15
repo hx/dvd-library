@@ -12,6 +12,7 @@ gem 'closure_tree'
 gem 'ruby-tmdb3'
 gem 'fastimage'
 gem 'therubyracer', require: 'v8'
+gem 'chronic'
 
 group :test, :development do
   gem 'capybara'

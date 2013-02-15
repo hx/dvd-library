@@ -12,6 +12,8 @@ class Studio < ActiveRecord::Base
 
   xml_importer { map '.', to: :name, key: true }
 
+  extend FindByPartialName
+
   attr_accessible :name
   has_many :studio_involvements, include: :title, dependent: :delete_all
   has_many :titles, through: :studio_involvements

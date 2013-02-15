@@ -25,4 +25,8 @@ class TitleScopeSet < Array
     join '/'
   end
 
+  def by_type(type)
+    select { |scope| scope.type == type.to_s }
+  end
+
 end

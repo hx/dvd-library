@@ -13,6 +13,6 @@
   Views: {}
   ajax: (path, query = null) ->
     path += '.json'
-    path += '?' + $.map(query, (k, v) -> encodeURIComponent(k) + '=' + encodeURIComponent(v)).join '&' if query
+    path += '?' + $.map(query, (v, k) -> encodeURIComponent(k) + '=' + encodeURIComponent(v)).join '&' if query
     $.ajax path
 

@@ -33,6 +33,8 @@ DvdLibrary.Views.SearchSuggestionView = SearchSuggestionView = Backbone.View.ext
     'mouseover .comparison span': 'setPhaseByEvent'
 
   initialize: ->
+    index = DvdLibrary.Models.index[@model.property]
+
     if @model.type == 'sort'
       x =
         value: "Sort by by #{$.capitalize @model.criteria}"
@@ -64,13 +66,13 @@ DvdLibrary.Views.SearchSuggestionView = SearchSuggestionView = Backbone.View.ext
 
     else if @model.type == 'filter'
       x =
-        value: DvdLibrary.Models.index[@model.property][@model.value]
+        value: if index then index[@model.value] else @model.value
 
     else if @model.type == 'person'
-      value = DvdLibrary.Models.index[@model.property][@model.value]
+      person = index[@model.value]
       x =
-        label: value.recent_role
-        value: value.full_name
+        label: person.recent_work
+        value: person.full_name
 
     else x = {}
 
