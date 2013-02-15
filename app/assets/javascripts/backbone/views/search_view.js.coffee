@@ -33,7 +33,7 @@ Views.SearchView = SearchView = Backbone.View.extend
     clearTimeout @searchTimeout if @searchTimeout
     @searchTimeout = setTimeout =>
       @searchTimeout = null
-      @library.getScopesForSearchTerm @searchFor, (scopeSet) =>
+      DvdLibrary.TitleScopeSet.forSearchTerm @searchFor, (scopeSet) =>
         return @changeInput @searchFor, true if @searchFor != newValue
         @searchFor = null
         @suggestions.render scopeSet

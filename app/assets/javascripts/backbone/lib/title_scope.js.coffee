@@ -1,3 +1,5 @@
+searchCache = {}
+
 DvdLibrary.TitleScopeSet = class TitleScopeSet
 
   constructor: (scopeSet = '') ->
@@ -7,3 +9,10 @@ DvdLibrary.TitleScopeSet = class TitleScopeSet
 
   byType: (type) ->
     $.grep @scopes, (scope) -> scope.type == type
+
+  @forSearchTerm: (term, callback) ->
+    return callback searchCache[term] if searchCache[term]
+    DvdLibrary.ajax('suggestions', query: term)
+      .done (response) ->
+        $.extend DvdLibrary.Models.index.person, response.people if response.people
+        callback searchCache[term] = new TitleScopeSet response.scopes

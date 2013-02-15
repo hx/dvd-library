@@ -1,6 +1,5 @@
 scopeCache = {}
 instances = {}
-searchCache = {}
 
 DvdLibrary.Models.Library = Library = Backbone.Model.extend
 
@@ -16,13 +15,6 @@ DvdLibrary.Models.Library = Library = Backbone.Model.extend
         scopeCache[scopes] = $.map response, (title_id) -> DvdLibrary.Models.Title.getInstanceById(title_id).set(library: library)
         callback scopeCache[scopes] if callback
     library
-
-  getScopesForSearchTerm: (term, callback) ->
-    return callback searchCache[term] if searchCache[term]
-    DvdLibrary.ajax(@url() + '/search', query: term)
-      .done (response) ->
-        $.extend DvdLibrary.Models.index.person, response.people if response.people
-        callback searchCache[term] = new DvdLibrary.TitleScopeSet response.scopes
 
   urlRoot: 'libraries'
 

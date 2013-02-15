@@ -1,7 +1,7 @@
-module LibrariesHelper
+module SuggestionsHelper
 
   def search_suggestions(term)
-    LibrariesHelper.search_suggestions term
+    SuggestionsHelper.search_suggestions term
   end
 
   def self.search_suggestions(term)

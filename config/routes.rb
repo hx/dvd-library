@@ -50,17 +50,16 @@ DvdLibrary::Application.routes.draw do
   # just remember to delete public/index.html.
   # root :to => 'welcome#index'
 
-  get 'tests', to: 'Qunit#show'
+  get 'tests', to: 'qunit#show'
+
+  get 'suggestions', to: 'suggestions#search'
 
   resources :libraries, only: :index do
-
-    get 'search', to: 'Libraries#search'
-
     resources :titles, only: :show
-    get 'titles(/*scope)', to: 'Titles#index'
+    get 'titles(/*scope)', to: 'titles#index'
   end
 
-  root to: 'Libraries#index'
+  root to: 'libraries#index'
 
 
   # See how all your routes lay out with "rake routes"
