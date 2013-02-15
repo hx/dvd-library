@@ -9,6 +9,7 @@
 #  birth_year  :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  search_name :string(255)
 #
 
 require 'spec_helper'

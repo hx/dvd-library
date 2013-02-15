@@ -16,6 +16,7 @@ gem 'chronic'
 
 group :test, :development do
   gem 'capybara'
+  gem 'factory_girl_rails'
   gem 'spork'
   gem 'rspec-rails'
   gem 'syntax'
