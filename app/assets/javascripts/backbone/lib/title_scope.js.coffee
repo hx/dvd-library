@@ -3,24 +3,16 @@ searchCache = {}
 DvdLibrary.TitleScopeSet = class TitleScopeSet
 
   constructor: (scopeSet = '') ->
-    @scopes = DvdLibrary.Helpers.parseScopes scopeSet
+    @augment scopeSet
 
-  toString: -> @scopes.join '/'
+  toString: -> @scopes?.join('/') || ''
 
-  byType: (type) ->
-    $.grep @scopes, (scope) -> scope.type == type
+  byType: (type) -> _.where @scopes, type: type
 
-  clone: ->
-    new TitleScopeSet @toString()
+  clone: -> new TitleScopeSet @toString()
 
   augment: (newScope) ->
-    if newScope.type
-      @scopes.push newScope
-    else if newScope.scopes
-      @scopes.push.apply @scopes, newScope.scopes
-    else
-      @scopes.push.apply @scopes, DvdLibrary.Helpers.parseScopes newScope
-    this
+    @scopes = DvdLibrary.Helpers.parseScopes _.compact([@toString(), newScope.toString()]).join '/'
 
   @forSearchTerm: (term, callback) ->
     return callback searchCache[term] if searchCache[term]

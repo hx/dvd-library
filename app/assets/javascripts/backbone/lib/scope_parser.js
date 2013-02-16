@@ -102,6 +102,23 @@
             }
             return false;
         },
+        sanitize = function (scopes) {
+            var j, former, latter,
+                i = scopes.length;
+            while (--i > 0) {
+                latter = scopes[j = i];
+                while (j--) {
+                    former = scopes[j];
+                    if ((former.toString() === latter.toString()) ||
+                            (former.type === 'search' && latter.type === 'search') ||
+                            (former.type === 'sort' && former.criteria === latter.criteria)) {
+                        scopes.splice(j, 1);
+                        i -= 1;
+                    }
+                }
+            }
+            return scopes;
+        },
         pattern,
         i = patterns.length;
 
@@ -123,7 +140,7 @@
             offset += scope.length + 1;
             scopes.push(pattern.factory.apply(this, pattern.leftRegex.exec(scope).slice(1)));
         }
-        return scopes;
+        return sanitize(scopes);
     };
 
 }).call(this);

@@ -92,7 +92,7 @@ DvdLibrary.Views.SearchSuggestionView = SearchSuggestionView = Backbone.View.ext
   setPhaseByIndex: (index) ->
     index = Math.max 0, Math.min 4, index
     @phase = index
-    @model.comparision = phases[@phase].replace /^e/, ''
+    @model.comparison = phases[@phase].replace /^e/, ''
     $.each phases, (i, phase) => @comparison.toggleClass phase, i == index
     index
 
