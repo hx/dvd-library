@@ -13,6 +13,7 @@ DvdLibrary.TitleScopeSet = class TitleScopeSet
 
   augment: (newScope) ->
     @scopes = DvdLibrary.Helpers.parseScopes _.compact([@toString(), newScope.toString()]).join '/'
+    this
 
   @forSearchTerm: (term, callback) ->
     return callback searchCache[term] if searchCache[term]

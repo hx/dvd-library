@@ -12,8 +12,11 @@ DvdLibrary.Routers.AppRouter = AppRouter = Backbone.Router.extend
       @listenTo view, 'changeScopeSet', (newScopeSet) =>
         @navigate "libraries/#{library_id}/titles/#{newScopeSet}", trigger: true
 
-    view.render new DvdLibrary.TitleScopeSet scope
-
+    scopeSet = new DvdLibrary.TitleScopeSet scope
+    if scopeSet.toString() == scope
+      view.render scopeSet
+    else
+      @navigate "libraries/#{library_id}/titles/#{scopeSet}", trigger: true, replace: true
 
 $ ->
   DvdLibrary.router = new AppRouter
