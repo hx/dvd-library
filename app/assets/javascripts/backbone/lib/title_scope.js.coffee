@@ -10,6 +10,18 @@ DvdLibrary.TitleScopeSet = class TitleScopeSet
   byType: (type) ->
     $.grep @scopes, (scope) -> scope.type == type
 
+  clone: ->
+    new TitleScopeSet @toString()
+
+  augment: (newScope) ->
+    if newScope.type
+      @scopes.push newScope
+    else if newScope.scopes
+      @scopes.push.apply @scopes, newScope.scopes
+    else
+      @scopes.push.apply @scopes, DvdLibrary.Helpers.parseScopes newScope
+    this
+
   @forSearchTerm: (term, callback) ->
     return callback searchCache[term] if searchCache[term]
     DvdLibrary.ajax('suggestions', query: term)

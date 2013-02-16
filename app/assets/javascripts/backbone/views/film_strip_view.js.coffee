@@ -43,5 +43,7 @@ Views.FilmStripView = FilmStripView = Backbone.View.extend
   template: '
   <div class="shading top"/>
   <div class="shading bottom"/>
+  <div class="shutter top"/>
+  <div class="shutter bottom"/>
   '
 

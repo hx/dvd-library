@@ -6,7 +6,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
   tagName: 'div'
 
-  className: 'library'
+  className: 'library loading'
 
   initialize: ->
     @setupTimers()
@@ -28,7 +28,14 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
     @focusedTitleView.on 'changeAspectRatio', => @layout skip: 'focusedTitle'
 
+    @searchView.on 'selectScope', _.bind @augmentScope, this
+
     @render if @model
+
+  loading: (newValue) ->
+    return @_loading unless newValue?
+    @_loading = !!newValue
+    @$el.toggleClass 'loading', newValue
 
   render: (newScopeSet) ->
     return if @scopeSet == newScopeSet
@@ -38,7 +45,14 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
     @scopeSet = newScopeSet
 
+    @focusedTitleView.render()
+
+    @loading true
+
     @model.getTitlesForScopes newScopeSet, (titles) =>
+
+      @loading false
+
       @titles = titles
       @filmStripView.setTitles titles
 
@@ -72,7 +86,8 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
     $.fn.fitTextHeight.fit()
 
-
+  augmentScope: (newScope) ->
+    @trigger 'changeScopeSet', @scopeSet.clone().augment newScope
 
   setupTimers: ->
     metrics = => [

@@ -1,7 +1,9 @@
 @import "_mixins";
+@import "compass/css3/transform";
 
 .library {
   @include fullscreen;
   font-family: 'Gill Sans MT', 'Gill Sans';
   color: white;
+  @include translate3d(0, 0, 0);
 }

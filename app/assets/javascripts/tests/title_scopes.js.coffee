@@ -1,5 +1,9 @@
 module 'Title Scopes'
 
+testScopes = [
+  'search/foo/sort/genre/rsort/title/person/2/studio/1/media-type/3/release-date-lt/2002-01-01'
+]
+
 valid_paths = [
   'search/anything/you/like'
   'sort/title'
@@ -36,10 +40,21 @@ for i in [1..2]
       equal scope.scopes.length, x, "... and should have #{x} scope(s)"
 
 test 'Division of scopes by type', ->
-  scopes = new DvdLibrary.TitleScopeSet 'search/foo/sort/genre/rsort/title/person/2/studio/1/media-type/3/release-date-lt/2002-01-01'
+  scopes = new DvdLibrary.TitleScopeSet testScopes[0]
   equal scopes.byType('search').length, 1, 'There should be 1 search scope'
   equal scopes.byType('sort').length,   2, 'There should be 2 sort scopes'
   equal scopes.byType('person').length, 1, 'There should be 2 person scope'
   equal scopes.byType('filter').length, 3, 'There should be 3 filter scopes'
 
+test 'Cloning', ->
+  scopes = new DvdLibrary.TitleScopeSet testScopes[0]
+  equal scopes.clone().toString(), scopes.toString(), 'Original and clone should have the same string representation'
 
+test 'Augmentation', ->
+  scopes = new DvdLibrary.TitleScopeSet 'search/foo'
+  scopes.augment 'sort/title'
+  equal scopes.toString(), 'search/foo/sort/title', 'New scope string should augment existing scope'
+  scopes.augment (new DvdLibrary.TitleScopeSet 'genre/12').scopes[0]
+  equal scopes.toString(), 'search/foo/sort/title/genre/12', 'New scope should augment existing scope'
+  scopes.augment new DvdLibrary.TitleScopeSet 'studio/69'
+  equal scopes.toString(), 'search/foo/sort/title/genre/12/studio/69', 'New scope set should augment existing scope'

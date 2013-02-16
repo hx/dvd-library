@@ -18,8 +18,9 @@ DvdLibrary.Views.FocusedTitleView = FocusedTitleView = Backbone.View.extend
     if model != @model
       @stopListening @model if @model
       @model = model
-      @listenTo model, 'change', _.bind(@render, this)
-      @model.fetch()
+      if model
+        @listenTo model, 'change', _.bind(@render, this)
+        model.fetch()
 
     if @model
       @labels.title.text model.get 'title'
@@ -32,6 +33,10 @@ DvdLibrary.Views.FocusedTitleView = FocusedTitleView = Backbone.View.extend
       if poster
         @poster.children().detach()
         @poster[0].appendChild poster
+
+    else
+      $.each @labels, -> @[0].innerHTML = ''
+      @poster.addClass 'missing'
 
     @layout()
 

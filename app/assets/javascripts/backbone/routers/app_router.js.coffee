@@ -1,12 +1,19 @@
 DvdLibrary.Routers.AppRouter = AppRouter = Backbone.Router.extend
 
   routes:
-    'libraries/:library_id/titles(/*scope)' : 'titles_index'
+    'libraries/:library_id/titles(/*scope)' : 'titlesIndex'
 
-  titles_index: (library_id, scope) ->
+  titlesIndex: (library_id, scope) ->
     model = DvdLibrary.Models.Library.getInstanceById library_id
     view = DvdLibrary.Views.LibraryView.getInstanceForModel model
+
+    if (view != @libraryView)
+      @libraryView = view
+      @listenTo view, 'changeScopeSet', (newScopeSet) =>
+        @navigate "libraries/#{library_id}/titles/#{newScopeSet}", trigger: true
+
     view.render new DvdLibrary.TitleScopeSet scope
+
 
 $ ->
   DvdLibrary.router = new AppRouter
