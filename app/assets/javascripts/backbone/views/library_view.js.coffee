@@ -17,6 +17,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
       .append((@filmStripView = new Views.FilmStripView).el)
       .append((@focusedTitleView = new Views.FocusedTitleView).el)
       .append((@searchView = new Views.SearchView library: @model).el)
+      .append((@scopeTokensView = new Views.ScopeTokenSetView ).el)
 
     @on 'resize', (width) ->
       @windowWidth = width

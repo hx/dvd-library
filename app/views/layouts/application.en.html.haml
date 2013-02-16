@@ -4,8 +4,8 @@
     %title DVD Library
     %base{href: '/'}
     %meta{charset: 'utf-8'}
-    = stylesheet_link_tag    "application", :media => "all"
-    = javascript_include_tag "application"
+    = stylesheet_link_tag    'application', media:   'all'
+    = javascript_include_tag 'application', charset: 'utf-8'
     = csrf_meta_tags
   %body
     = image_tag 'background.jpg', id: 'background'

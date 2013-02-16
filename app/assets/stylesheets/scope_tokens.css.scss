@@ -1,0 +1,15 @@
+div.library .tokens {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 45%;
+  height: 45%;
+
+  .column {
+    float: right;
+    height: 100%;
+    .token {
+      height: 10%;
+    }
+  }
+}

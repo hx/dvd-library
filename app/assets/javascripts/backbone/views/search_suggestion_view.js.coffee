@@ -37,7 +37,7 @@ DvdLibrary.Views.SearchSuggestionView = SearchSuggestionView = Backbone.View.ext
 
     if @model.type == 'sort'
       x =
-        value: "Sort by by #{$.capitalize @model.criteria}"
+        value: "Sort by #{$.capitalize @model.criteria}"
         label: 'Sort'
 
     else if @model.property == 'runtime'
