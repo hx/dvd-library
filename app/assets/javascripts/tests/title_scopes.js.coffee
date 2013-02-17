@@ -7,11 +7,11 @@ testScopes = [
 ]
 
 validScopes = [
-  'search/anything/you/like'
+  'search/anything%2Fyou%2Flike'
   'sort/title'
   'rsort/production-year'
   'runtime/90-125'
-  'certification/MA 15+'
+  'certification/MA%2015%2B'
   'person/14'
   'studio/1'
   'production-year/2000'

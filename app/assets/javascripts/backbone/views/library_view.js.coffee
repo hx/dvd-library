@@ -31,6 +31,8 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
     @searchView.on 'selectScope', _.bind @augmentScope, this
 
+    @scopeTokensView.on 'removeScope', _.bind @removeScope, this
+
     @render if @model
 
   loading: (newValue) ->
@@ -41,12 +43,11 @@ Views.LibraryView = LibraryView = Backbone.View.extend
   render: (newScopeSet) ->
     return if @scopeSet == newScopeSet
 
-    #if @scope
-      #todo deal with old scope
-
     @scopeSet = newScopeSet
 
     @focusedTitleView.render()
+
+    @scopeTokensView.render newScopeSet
 
     @loading true
 
@@ -87,8 +88,13 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
     $.fn.fitTextHeight.fit()
 
+    @scopeTokensView.layout()
+
   augmentScope: (newScope) ->
     @trigger 'changeScopeSet', @scopeSet.clone().augment newScope
+
+  removeScope: (scope) ->
+    @trigger 'changeScopeSet', @scopeSet.clone().remove scope
 
   setupTimers: ->
     metrics = => [

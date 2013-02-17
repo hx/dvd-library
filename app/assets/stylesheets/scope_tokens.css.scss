@@ -1,15 +1,68 @@
+@import "compass/css3/images";
+@import "compass/css3/opacity";
+@import "compass/css3/box-shadow";
+@import "compass/css3/text-shadow";
+@import "compass/css3/transition";
+@import "compass/css3/border-radius";
+@import "compass/css3/transform";
+
 div.library .tokens {
   position: absolute;
   right: 0;
-  bottom: 0;
-  width: 45%;
-  height: 45%;
+  bottom: 3.4%;
+  width: 60%;
+  height: 37.4%;
 
-  .column {
-    float: right;
-    height: 100%;
-    .token {
-      height: 10%;
+  .token {
+    position: absolute;
+    height: 14%;
+    font-style: italic;
+    @include transform(scale(.1));
+    @include opacity(0);
+    @include transition-property(top, right, transform, opacity);
+    @include transition-duration(500ms);
+    &.visible {
+      @include opacity(1);
+      @include transform(scale(1));
+    }
+    > div {
+      @include box-shadow(0 4px 16px rgba(0, 0, 0, .25));
+      float: left;
+      height: 100%;
+    }
+    .label {
+      @include border-radius(50px 0 0 50px);
+      @include background(linear-gradient(top, #333333, #1e1e1e));
+      color: #838383;
+      .text {
+        display: block;
+        padding: .6em;
+        padding-left: 1em;
+      }
+    }
+    .value {
+      @include border-radius(0 50px 50px 0);
+      @include background(linear-gradient(top, #bfbebe, #908e8e));
+      color: #1b1b1b;
+      @include text-shadow(0 1px 0 rgba(255, 255, 255, .36));
+      margin-left: 2px;
+      .text {
+        display: block;
+        padding: .3em 1.5em 0 .4em;
+      }
+      a.remove {
+        position: absolute;
+        display: block;
+        top: .4em;
+        right: .5em;
+        color: #828282;
+        @include transition-property(color, transform);
+        @include transition-duration(600ms);
+        &:hover {
+          color: #28467e;
+          @include transform(rotate(360deg));
+        }
+      }
     }
   }
 }

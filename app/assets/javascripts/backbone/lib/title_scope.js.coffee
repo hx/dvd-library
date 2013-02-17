@@ -15,6 +15,18 @@ DvdLibrary.TitleScopeSet = class TitleScopeSet
     @scopes = DvdLibrary.Helpers.parseScopes _.compact([@toString(), newScope.toString()]).join '/'
     this
 
+  indexOf: (scope) ->
+    scope = scope.toString()
+    for value, index in @scopes
+      return index if value.toString() == scope
+    -1
+
+  remove: (scope) ->
+    scope = scope.toString()
+    index = @indexOf scope
+    @scopes.splice index, 1 unless index < 0
+    this
+
   @forSearchTerm: (term, callback) ->
     return callback searchCache[term] if searchCache[term]
     DvdLibrary.ajax('suggestions', query: term)

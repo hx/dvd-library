@@ -1,5 +1,7 @@
 template = _.template """
-  <div class="label"><%- label %></div>
+  <div class="label">
+    <span class="text"><%- label %></span>
+  </div>
   <div class="value">
     <span class="text"><%- value %></span>
     <a href="javascript:" class="remove">×</a>
@@ -15,6 +17,9 @@ DvdLibrary.Views.ScopeTokenView = ScopeTokenView = Backbone.View.extend
   tagName: 'div'
 
   className: 'token'
+
+  events:
+    'click a.remove': 'remove'
 
   initialize: ->
     index = DvdLibrary.Models.index[@model.property]
@@ -74,3 +79,14 @@ DvdLibrary.Views.ScopeTokenView = ScopeTokenView = Backbone.View.extend
       x.value = value.join(' ').replace(/^\w/, (x) -> x.toUpperCase())
 
     @el.innerHTML = template x
+
+    @label = @$ '.label'
+    @value = @$ '.value'
+
+    @$('.label .text').fitTextHeight .4, @$('.label')
+    @$('.value > *').fitTextHeight .55, @$('.value')
+
+  labelWidth: -> @label[0].offsetWidth
+  valueWidth: -> @value[0].offsetWidth
+
+  remove: -> @trigger 'remove', @model

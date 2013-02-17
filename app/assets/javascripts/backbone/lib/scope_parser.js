@@ -1,6 +1,7 @@
 (function () {
     "use strict";
 
+    var window = this;
     var patterns = [
         {
             pattern: '(r)?sort/(title|release-date|production-year|genre|media-type|runtime|certification)',
@@ -17,8 +18,8 @@
             factory: function (term) {
                 return {
                     type: 'search',
-                    term: term,
-                    toString: function () { return 'search/' + this.term; }
+                    term: window.decodeURIComponent(term),
+                    toString: function () { return 'search/' + window.encodeURIComponent(this.term); }
                 };
             }
         }, {
@@ -39,8 +40,8 @@
                 return {
                     type: 'filter',
                     property: property,
-                    value: value,
-                    toString: function () { return this.property + '/' + this.value; }
+                    value: window.decodeURIComponent(value),
+                    toString: function () { return this.property + '/' + window.encodeURIComponent(this.value); }
                 };
             }
         }, {

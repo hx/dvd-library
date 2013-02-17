@@ -18,7 +18,7 @@ testData =
   'production-year-lte/2007':     [ 'Produced',     'In or before 2007'         ]
   'production-year-gt/2007':      [ 'Produced',     'After 2007'                ]
   'production-year-gte/2007':     [ 'Produced',     'In or after 2007'          ]
-  'certification/MA 15+':         [ 'Certification','MA 15+'                    ]
+  'certification/MA%2015%2B':     [ 'Certification','MA 15+'                    ]
 
 DvdLibrary.Models.index =
   genre:
@@ -36,7 +36,7 @@ test "Correct labels and values", ->
   for i, v of testData
     scope = (new DvdLibrary.TitleScopeSet i).scopes[0]
     view  = new DvdLibrary.Views.ScopeTokenView model: scope
-    label = view.$('.label').text()
-    value = view.$('.value .text').text()
+    label = $.trim view.$('.label').text()
+    value = $.trim view.$('.value .text').text()
     equal label, v[0], "Scope token for #{i} should have the right label"
-    equal value, v[1], "Scope token for #{i} should have the right value"
+    equal value, v[1], "Scope token for #{i} should have the right val

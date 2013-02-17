@@ -4,15 +4,15 @@ class TitlesController < ApplicationController
     library = Library.find_by_id(params[:library_id])
     respond_to do |format|
       format.html do
-        @models = {person: {}}
+        @models = {
+            person: person_index_for(TitleScopeSet.new params[:scope])
+        }
         [MediaType, Genre, Studio].each do |klass|
           @models[klass.name.underscore.gsub('_', '-').to_sym] = Hash[klass.all.map do |record|
             [record.id, record.name]
           end]
         end
-        # disregard scope; we're only serving a lookup table of IDs and titles
-        @titles = {}
-        library.titles.each { |title| @titles[title.id] = title.title }
+        @titles = Hash[library.titles.map { |t| [t.id, t.title] }]
       end
       format.json do
         #todo Handle params[:scope]
