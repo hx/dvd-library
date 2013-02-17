@@ -19,4 +19,5 @@
 /nbproject
 
 /public/posters/*.jpg
+/public/assets/*
 /api_keys.yml
