@@ -20,6 +20,8 @@
 
 class Title < ActiveRecord::Base
 
+  extend FindByScopeSet
+
   acts_as_tree
 
   xml_importer do
@@ -51,11 +53,9 @@ class Title < ActiveRecord::Base
                   :certification,
                   :vendor_id
 
-  default_scope order 'sort_title'
-
   def self.all_certifications
-    @all_certifications ||= unscoped
-      .select(:certification)
+    @all_certifications ||=
+      select(:certification)
       .group(:certification)
       .map(&:certification)
       .select(&:present?)

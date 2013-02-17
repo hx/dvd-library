@@ -25,8 +25,9 @@ class TitleScopeSet < Array
     join '/'
   end
 
-  def by_type(type)
-    select { |scope| scope.type == type.to_s }
+  def by_type(*args)
+    types = args.map(&:to_s)
+    select { |scope| types.include? scope.type }
   end
 
 end
