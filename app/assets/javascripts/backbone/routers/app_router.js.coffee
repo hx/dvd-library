@@ -21,15 +21,7 @@ DvdLibrary.Routers.AppRouter = AppRouter = Backbone.Router.extend
       @navigate "libraries/#{library_id}/titles/#{scopeSet}", trigger: true, replace: true
 
   librariesIndex: ->
-    background = $('#background')[0]
-    listStyle = $('#libraries')[0].style
-    props = 'webkitTransform mozTransform msTransform oTransform transform'.split ' '
-    onResize = =>
-      scale = "scale(#{background.offsetHeight / 900})"
-      _.each props, (prop) -> listStyle[prop] = scale
-
-    $(window).resize onResize
-    onResize()
+    @librariesView = new DvdLibrary.Views.LibrariesView el: $('#libraries')[0]
 
 $ ->
   DvdLibrary.router = new AppRouter
