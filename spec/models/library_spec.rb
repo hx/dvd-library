@@ -5,6 +5,7 @@
 #  id         :integer          not null, primary key
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  name       :string(255)      default("")
 #
 
 require 'spec_helper'
@@ -16,5 +17,6 @@ describe Library do
   subject { library }
 
   it { should respond_to :titles }
+  it { should respond_to :name }
 
 end

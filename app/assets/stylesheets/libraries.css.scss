@@ -1,0 +1,61 @@
+@import "compass/css3/border-radius";
+@import "compass/css3/text-shadow";
+@import "compass/css3/box-shadow";
+@import "compass/css3/transition";
+
+#libraries {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  margin-top: -180px;
+  text-align: center;
+  width: 100%;
+
+  li {
+    display: inline-block;
+    height: 360px;
+    width: 310px;
+    position: relative;
+    @include border-radius(45px);
+    @include transition-property(background, box-shadow);
+    @include transition-duration(300ms);
+
+    &:hover {
+      background: #303030;
+      @include box-shadow(inset 0 0 4px rgba(0, 0, 0, .2));
+    }
+
+    margin-left: 16px;
+    &:first-child { margin-left: 0 }
+
+    a {
+      display: block;
+      height: 100%;
+
+      img {
+        position: absolute;
+        top: 36px;
+        left: 8px;
+      }
+
+      span {
+        display: block;
+        position: absolute;
+        width: 100%;
+        bottom: 32px;
+        text-align: center;
+        color: #ccc;
+        font: 100 32px/32px 'Helvetica Neue', 'Helvetica', 'Gill Sans MT', 'Gill Sans', gill;
+        letter-spacing: 1px;
+        @include text-shadow(0 2px 9px rgba(0, 0, 0, .75));
+        @include transition-property(color);
+        @include transition-duration(500ms);
+      }
+    }
+
+    &:hover a span {
+      color: #fff;
+    }
+  }
+
+}

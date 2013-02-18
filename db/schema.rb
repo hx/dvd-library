@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130215025110) do
+ActiveRecord::Schema.define(:version => 20130218123138) do
 
   create_table "genres", :force => true do |t|
     t.string   "name"
@@ -22,8 +22,9 @@ ActiveRecord::Schema.define(:version => 20130215025110) do
   add_index "genres", ["name"], :name => "index_genres_on_name", :unique => true
 
   create_table "libraries", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+    t.string   "name",       :default => ""
   end
 
   create_table "media_types", :force => true do |t|
