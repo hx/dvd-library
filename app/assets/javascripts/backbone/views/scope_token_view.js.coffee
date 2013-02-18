@@ -61,7 +61,7 @@ DvdLibrary.Views.ScopeTokenView = ScopeTokenView = Backbone.View.extend
         value: if index then index[@model.value] else @model.value
 
     else if @model.type == 'person'
-      person = index[@model.value]
+      DvdLibrary.reload() unless person = index[@model.value]
       x =
         label: 'Cast/Crew'
         value: person.full_name

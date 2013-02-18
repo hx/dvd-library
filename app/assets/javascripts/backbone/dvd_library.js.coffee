@@ -16,3 +16,5 @@
     path += '?' + $.map(query, (v, k) -> encodeURIComponent(k) + '=' + encodeURIComponent(v)).join '&' if query
     $.ajax path
 
+  reload: ->
+    document.location.href += ''
