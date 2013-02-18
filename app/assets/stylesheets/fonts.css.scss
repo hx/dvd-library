@@ -1,0 +1,14 @@
+@mixin font-definition($family, $font-file, $style:normal, $weight:normal) {
+  @font-face {
+    font-family: quote($family);
+    font-style:  $style;
+    font-weight: $weight;
+    src: asset-url('#{$font-file}-webfont.eot',         font);
+    src: asset-url('#{$font-file}-webfont.eot?#iefix',  font) format('embedded-opentype'),
+         asset-url('#{$font-file}-webfont.woff',        font) format('woff'),
+         asset-url('#{$font-file}-webfont.ttf',         font) format('truetype');
+  }
+}
+
+@include font-definition(gill, gill_ssi);
+@include font-definition(gill, gill_ssi_italic, italic);

@@ -3,7 +3,6 @@
 
 .library {
   @include fullscreen;
-  font-family: 'Gill Sans MT', 'Gill Sans';
+  font-family: 'Gill Sans MT', 'Gill Sans', gill;
   color: white;
-  @include translate3d(0, 0, 0);
 }
