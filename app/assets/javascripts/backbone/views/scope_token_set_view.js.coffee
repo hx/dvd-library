@@ -30,6 +30,7 @@ DvdLibrary.Views.ScopeTokenSetView = ScopeTokenSetView = Backbone.View.extend
       unless tokenViews[scopeName]
         tokenViews[scopeName] = view = new DvdLibrary.Views.ScopeTokenView model: scope
         @listenTo view, 'remove', (scope) => @trigger 'removeScope', scope
+        @listenTo view, 'reverseSort', (scope) => @trigger 'reverseSort', scope
         @el.appendChild view.el
         newElements.push view.el
 

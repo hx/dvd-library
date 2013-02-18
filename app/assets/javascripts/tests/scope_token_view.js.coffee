@@ -2,8 +2,8 @@ module 'ScopeTokenView'
 
 testData =
   'search/foo':                   [ 'Contains',     'foo'                       ]
-  'sort/title':                   [ 'Sort by ▶',    'Title'                     ]
-  'rsort/release-date':           [ 'Sort by ◀',    'Release Date'              ]
+  'sort/title':                   [ 'Sort by',      'Title'                     ]
+  'rsort/release-date':           [ 'Sort by',      'Release Date'              ]
   'person/1':                     [ 'Cast/Crew',    'Hugh Laurie'               ]
   'genre/1':                      [ 'Genre',        'Action'                    ]
   'media-type/1':                 [ 'Media',        'DVD'                       ]
@@ -39,4 +39,4 @@ test "Correct labels and values", ->
     label = $.trim view.$('.label').text()
     value = $.trim view.$('.value .text').text()
     equal label, v[0], "Scope token for #{i} should have the right label"
-    equal value, v[1], "Scope token for #{i} should have the right val
+    equal value, v[1], "Scope token for #{i} should have the right value"

@@ -40,6 +40,27 @@ div.library .tokens {
         padding-left: 1em;
       }
     }
+    &.sort .label {
+      cursor: pointer;
+    }
+    &.sort .label .text:before {
+
+      font: .8em/.8em 'Arial Unicode';
+      color: #50874d;
+      @include transition-property(color);
+      @include transition-duration(300ms);
+    }
+    &.sort.reverse .label .text:before,
+    &.sort .label:hover .text:before {
+      content: "↩ \A0";
+    }
+    &.sort .label .text:before,
+    &.sort.reverse .label:hover .text:before {
+      content: "↪ \A0";
+    }
+    &.sort .label:hover .text:before {
+      color: #7a97f5;
+    }
     .value {
       @include border-radius(0 50px 50px 0);
       @include background(linear-gradient(top, #bfbebe, #908e8e));

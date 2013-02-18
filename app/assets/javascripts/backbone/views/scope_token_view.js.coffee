@@ -20,14 +20,17 @@ DvdLibrary.Views.ScopeTokenView = ScopeTokenView = Backbone.View.extend
 
   events:
     'click a.remove': 'remove'
+    'click .label':   'reverse'
 
   initialize: ->
     index = DvdLibrary.Models.index[@model.property]
 
     if @model.type == 'sort'
+      @$el.addClass 'sort'
+      @$el.addClass 'reverse' if @model.reverse
       x =
         value: $.capitalize @model.criteria
-        label: 'Sort by ' + (if @model.reverse then '◀' else '▶')
+        label: 'Sort by'
 
     else if @model.property == 'runtime'
       x =
@@ -90,3 +93,5 @@ DvdLibrary.Views.ScopeTokenView = ScopeTokenView = Backbone.View.extend
   valueWidth: -> @value[0].offsetWidth
 
   remove: -> @trigger 'remove', @model
+
+  reverse: -> @trigger 'reverseSort', @model if @model.type == 'sort'

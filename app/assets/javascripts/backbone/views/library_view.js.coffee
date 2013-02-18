@@ -32,6 +32,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
     @searchView.on 'selectScope', _.bind @augmentScope, this
 
     @scopeTokensView.on 'removeScope', _.bind @removeScope, this
+    @scopeTokensView.on 'reverseSort', _.bind @reverseSort, this
 
     @render if @model
 
@@ -95,6 +96,12 @@ Views.LibraryView = LibraryView = Backbone.View.extend
 
   removeScope: (scope) ->
     @trigger 'changeScopeSet', @scopeSet.clone().remove scope
+
+  reverseSort: (scope) ->
+    newScopeSet = @scopeSet.clone()
+    scope = newScopeSet.scopes[newScopeSet.indexOf scope]
+    scope.reverse = !scope.reverse
+    @trigger 'changeScopeSet', newScopeSet
 
   setupTimers: ->
     metrics = => [
