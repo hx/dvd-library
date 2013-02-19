@@ -62,22 +62,26 @@ class Poster
   end
 
   def dimensions
-    FastImage.size path if exists?
+    if exists?
+      @size ||= FastImage.size(path)
+    else
+      third_party[:size]
+    end
   end
 
   def uri
     if exists?
-      (@uri ||= URI % file_name)
+      @uri ||= URI % file_name
     else
-      third_party_url
+      third_party[:url]
     end
   end
 
   def download(async = false)
     return Poster.queue_for_download self if async
     return if exists?
-    return unless url = third_party_url
-    data = open(url).read rescue return
+    return unless third_party[:url]
+    data = open(third_party[:url]).read rescue return
     if data.length > 1000
       File.open(expected_path, 'wb') { |file| file.write data }
     else
@@ -93,30 +97,30 @@ class Poster
     @file_name ||= title.vendor_id + '.jpg'
   end
 
-  private
-
-    def third_party_url
-      return @third_party_url unless @third_party_url.nil?
-      if @title.third_party_poster_url.nil?
-        if title.tv?
-          #todo something for the tv shows
-        elsif @title.library.tmdb_api_key
-          Tmdb.api_key = @title.library.tmdb_api_key
-          Tmdb.default_language = 'en'
-          movie_titles = [title.title]
-          movie_titles.unshift "#{title.title} (#{title.production_year})" if title.production_year > 0
-          movie_titles << title.title.gsub(/&/, ' and ').gsub(/[^\w]+/, ' ')
-          movie_titles << title.title.gsub(/\s*[-:\/(].*/, ' ')
-          movie_titles.uniq.each do |movie_title|
-            movie_data = TmdbMovie.find title: movie_title, limit: 1, expand_results: false
-            if movie_data.respond_to? :poster
-              @title.update_attribute :third_party_poster_url, movie_data.poster.sizes.original.url
-              break
-            end
+  def third_party
+    return @third_party unless @third_party.nil?
+    if @title.third_party_poster[:url].nil?
+      if title.tv?
+        #todo something for the tv shows
+      elsif @title.library.tmdb_api_key
+        Tmdb.api_key = @title.library.tmdb_api_key
+        Tmdb.default_language = 'en'
+        movie_titles = [title.title]
+        movie_titles.unshift "#{title.title} (#{title.production_year})" if title.production_year > 0
+        movie_titles << title.title.gsub(/&/, ' and ').gsub(/[^\w]+/, ' ')
+        movie_titles << title.title.gsub(/\s*[-:\/(].*/, ' ')
+        movie_titles.uniq.each do |movie_title|
+          movie_data = TmdbMovie.find title: movie_title, limit: 1, expand_results: false
+          if movie_data.respond_to? :poster
+            url = movie_data.poster.sizes.original.url
+            size = FastImage.size url, timeout: 5
+            @title.update_attribute :third_party_poster, {url: url, size: size}
+            break
           end
         end
       end
-      @third_party_url = @title.third_party_poster_url || false
     end
+    @third_party = @title.third_party_poster
+  end
 
 end

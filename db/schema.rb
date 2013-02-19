@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130219022029) do
+ActiveRecord::Schema.define(:version => 20130219035230) do
 
   create_table "genres", :force => true do |t|
     t.string   "name"
@@ -111,8 +111,8 @@ ActiveRecord::Schema.define(:version => 20130219022029) do
   create_table "titles", :force => true do |t|
     t.string   "barcode"
     t.string   "title"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.text     "overview"
     t.string   "sort_title"
     t.integer  "production_year"
@@ -122,7 +122,7 @@ ActiveRecord::Schema.define(:version => 20130219022029) do
     t.integer  "library_id"
     t.integer  "parent_id"
     t.string   "vendor_id"
-    t.string   "third_party_poster_url"
+    t.string   "third_party_poster"
   end
 
   add_index "titles", ["barcode"], :name => "index_titles_on_barcode"
