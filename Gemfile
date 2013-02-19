@@ -5,7 +5,6 @@ gem 'rails'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
 gem 'nokogiri'
 gem 'pg'
 gem 'closure_tree'
@@ -24,6 +23,10 @@ group :test, :development do
   gem 'rb-fsevent'
   gem 'guard-spork'
   gem 'guard-rspec'
+end
+
+group :test do
+  gem 'sqlite3'
 end
 
 # Gems used only for assets and not required

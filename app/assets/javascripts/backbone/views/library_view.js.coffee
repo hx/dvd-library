@@ -34,7 +34,9 @@ Views.LibraryView = LibraryView = Backbone.View.extend
     @scopeTokensView.on 'removeScope', _.bind @removeScope, this
     @scopeTokensView.on 'reverseSort', _.bind @reverseSort, this
 
-    @render if @model
+    @$el.makeTitleUploader(@model.id)
+
+    @render
 
   loading: (newValue) ->
     return @_loading unless newValue?

@@ -39,6 +39,35 @@ class TitlesController < ApplicationController
     end
   end
 
+  def create
+    respond_to do |format|
+      format.json do
+        file = params[:userfile]
+        resp = { errors: [] }
+        if file.nil?
+          resp[:errors].push code: 1, message: 'No files.'
+        elsif file.content_type == 'text/xml'
+          begin
+            title = @library.titles.from_xml file.tempfile
+          rescue
+            resp[:errors].push code: 3, message: 'Invalid XML format.'
+          else
+            if title.vendor_id.present?
+              resp[:title] = {
+                  title: title.title
+              }
+            else
+              resp[:errors].push code: 4, message: 'Unrecognised XML format.'
+            end
+          end
+        else
+          resp[:errors].push code: 2, message: 'I can\'t do anything with this type of file.'
+        end
+        render text: resp.to_json
+      end
+    end
+  end
+
   private
 
     def find_library

@@ -55,7 +55,7 @@ DvdLibrary::Application.routes.draw do
   get 'suggestions', to: 'suggestions#search'
 
   resources :libraries, only: :index do
-    resources :titles, only: :show
+    resources :titles, only: [:show, :create]
     get 'titles(/*scope)', to: 'titles#index'
   end
 

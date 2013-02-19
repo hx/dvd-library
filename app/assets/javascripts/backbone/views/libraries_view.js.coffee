@@ -2,17 +2,7 @@ DvdLibrary.Views.LibrariesView = LibrariesView = Backbone.View.extend
 
   initialize: ->
     @bindScaleToWindowHeight()
-    @$('> li').each ->
-      $li = $(@)
-      id = /\d+/.exec(@id)[0]
-      $(@).filedrop
-        url: -> "libraries/#{id}/titles"
-        allowedfiletypes: ['text/xml']
-        error: ->
-        dragOver:  -> $li.addClass    'dropping'
-        dragLeave: -> $li.removeClass 'dropping'
-        drop:      -> $li.removeClass 'dropping'
-
+    @$('> li').makeTitleUploader(-> /\d+/.exec(@id)[0])
 
   bindScaleToWindowHeight: ->
     background = $('#background')[0]
