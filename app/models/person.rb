@@ -46,7 +46,11 @@ class Person < ActiveRecord::Base
 
   def recent_work
     role = roles.joins(:title).order('release_date DESC').first
-    "#{role.job}, #{role.title.title}"
+    if role
+      "#{role.job}, #{role.title.title}"
+    else
+      'Cast/Crew'
+    end
   end
 
   private
