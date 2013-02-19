@@ -60,6 +60,21 @@ class TitlesController < ApplicationController
               resp[:errors].push code: 4, message: 'Unrecognised XML format.'
             end
           end
+        elsif file.content_type == 'image/jpeg'
+          vendor_id = /^(.+)f\.jpg$/.match file.original_filename
+          if vendor_id.nil?
+            resp[:errors].push code: 5, message: 'Invalid file name.'
+          else
+            title = @library.titles.find_by_vendor_id vendor_id[1]
+            if title.nil?
+              resp[:errors].push code: 6, message: 'Title not found.'
+            else
+              title.poster = file.tempfile
+              resp[:title] = {
+                  title: title.title
+              }
+            end
+          end
         else
           resp[:errors].push code: 2, message: 'I can\'t do anything with this type of file.'
         end

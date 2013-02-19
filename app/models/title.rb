@@ -88,4 +88,8 @@ class Title < ActiveRecord::Base
     @poster ||= Poster.new self
   end
 
+  def poster=(image)
+      File.open(poster.expected_path, 'wb') { |f| f.write image.read } if image.respond_to? :read
+  end
+
 end

@@ -24,7 +24,7 @@ $.capitalize = (text) ->
 
 
 titleUploaderDefaultOptions =
-  allowedfiletypes: ['text/xml']
+  allowedfiletypes: ['text/xml', 'image/jpeg']
   maxfilesize:      1 # mb
   error:      ->
   dragOver:   -> @addClass    'dropping'
