@@ -15,4 +15,5 @@
 //= require_tree ../../../vendor/assets/javascripts/underscore
 //= require_tree ../../../vendor/assets/javascripts/backbone
 //= require_tree ../../../vendor/assets/javascripts/jquery-plugins
+//= require_tree ./jquery-plugins
 //= require backbone/dvd_library

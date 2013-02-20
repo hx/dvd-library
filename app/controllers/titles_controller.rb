@@ -7,14 +7,15 @@ class TitlesController < ApplicationController
     respond_to do |format|
       format.html do
         @models = {
-            person: person_index_for(@scope)
+            person: person_index_for(@scope),
+            library: { @library.id => @library.name },
+            title: Hash[@library.titles.map { |t| [t.id, t.title] }]
         }
         [MediaType, Genre, Studio].each do |klass|
           @models[klass.name.underscore.gsub('_', '-').to_sym] = Hash[klass.all.map do |record|
             [record.id, record.name]
           end]
         end
-        @titles = Hash[@library.titles.map { |t| [t.id, t.title] }]
       end
       format.json do
         title_ids = @library.titles.find_by_scope_set(@scope).map(&:id)
@@ -42,7 +43,7 @@ class TitlesController < ApplicationController
   def create
     respond_to do |format|
       format.json do
-        file = params[:userfile]
+        file = params[:files] && params[:files].first.last
         resp = { errors: [] }
         if file.nil?
           resp[:errors].push code: 1, message: 'No files.'

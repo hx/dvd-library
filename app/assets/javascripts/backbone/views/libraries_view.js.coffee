@@ -2,7 +2,7 @@ DvdLibrary.Views.LibrariesView = LibrariesView = Backbone.View.extend
 
   initialize: ->
     @bindScaleToWindowHeight()
-    @$('> li').makeTitleUploader(-> /\d+/.exec(@id)[0])
+    @$('> li').makeImporterForLibrary(-> /\d+/.exec(@id)[0])
 
   bindScaleToWindowHeight: ->
     background = $('#background')[0]

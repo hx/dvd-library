@@ -1,0 +1,59 @@
+@import "_mixins";
+@import "compass/css3/border-radius";
+@import "compass/css3/box-shadow";
+@import "compass/css3/transform";
+@import "compass/css3/transition";
+@import "compass/css3/opacity";
+
+div.dialog {
+  @include fullscreen;
+
+  .background {
+    @include fullscreen;
+    background: rgba(0, 0, 0, .6);
+    @include opacity(0);
+    @include transition-property(transform, opacity);
+    @include transition-duration(500ms);
+  }
+
+  .foreground {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 2px solid #aaa9a9;
+    @include border-radius(15px);
+    background: rgba(12, 12, 12, .8);
+    overflow: hidden;
+    font: 12px/14px Arial;
+    @include box-shadow(0 0 95px rgba(255, 255, 255, .33));
+    @include opacity(0);
+    @include transform(scale(.8));
+    @include transition-property(transform, opacity, width, height, margin);
+    @include transition-duration(500ms);
+    @include transition-timing-function(easeOut);
+    @include transition-delay(0ms);
+
+    h1 {
+      font: 100 18px/18px 'Helvetica Neue', HelveticaNeue, Helvetica;
+      padding: 16px 0;
+      text-align: center;
+      letter-spacing: .5px;
+    }
+
+    .body {
+      padding: 0 14px;
+    }
+  }
+
+  &.visible {
+    .foreground {
+      @include transition-timing-function(easeIn);
+      @include transition-delay(100ms);
+      @include transform(scale(1));
+      @include opacity(1);
+    }
+    .background {
+      @include opacity(1);
+    }
+  }
+}

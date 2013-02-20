@@ -21,4 +21,4 @@ DvdLibrary.Models.Library = Library = Backbone.Model.extend
 , # static methods
 
   getInstanceById: (id) ->
-    instances[id] ||= new this id: id
+    instances[id] ||= new this id: id, name: DvdLibrary.Models.index.library[id]

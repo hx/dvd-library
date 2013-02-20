@@ -43,4 +43,4 @@ DvdLibrary.Models.Title = Title = Backbone.Model.extend
   getInstanceById: (title_id) ->
     (@instances ||= {})[title_id] ||= new this
       id:    title_id
-      title: @titlesById[title_id]
+      title: DvdLibrary.Models.index.title[title_id]

@@ -1,0 +1,22 @@
+@import "compass/css3/transition";
+@import "compass/css3/border-radius";
+@import "compass/css3/images";
+
+.progress-bar {
+  position: relative;
+  height: 23px;
+  overflow: hidden;
+  @include border-radius(50px);
+  @include background(linear-gradient(top, #525252, #343434));
+
+  .inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    @include background(linear-gradient(top, #73c16f, #085604));
+    @include transition-property(width);
+    @include transition-duration(250ms);
+  }
+}

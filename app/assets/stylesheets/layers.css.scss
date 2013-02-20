@@ -12,3 +12,6 @@
   .tokens          { z-index: 55 }
   .search          { z-index: 60 }
 }
+.dialog            { z-index: 80 ;
+  .foreground      { z-index: 85 }
+}
