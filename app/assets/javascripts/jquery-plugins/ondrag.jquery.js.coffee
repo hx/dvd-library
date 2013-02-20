@@ -1,4 +1,5 @@
 drop = (event) ->
+  event = event.originalEvent || event
   event.preventDefault()
   data = @_drag
   data.dragging = false

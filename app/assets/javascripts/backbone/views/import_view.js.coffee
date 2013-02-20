@@ -75,6 +75,7 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
   acceptFile: (file) ->
     @files.push file
     @totalBytes += file.size
+    true
 
   log: (message, type) ->
     $('<p>').appendTo(@$log).text(message).addClass(type || 'notice')
@@ -82,8 +83,11 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
   rejectFile: (file, reason) ->
     ++@rejectedFileCount
     @log "Rejected '#{file.name}': #{reason}"
+    false
 
   uploadStarted: (file) ->
+
+  uploadProgressed: (file, progress) ->
 
   uploadSucceeded: (file, title) ->
 

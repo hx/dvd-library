@@ -11,11 +11,15 @@ buildMultiPart = (boundary, data) ->
     ret += crlf + crlf + value.data || value + crlf
   ret + dashdash + boundary + dashdash + crlf
 
+sendAsBinary = XMLHttpRequest.prototype.sendAsBinary || (data) ->
+  @send (new Uint8Array(Array.prototype.map.call(data, (x) -> x.charCodeAt(0) & 0xff))).buffer
+
 $.upload = (files, options, callback) ->
   files = [files] unless files.push
-  data = options.data || {}
+  queue = files.slice()
+  data = _.extend {}, options.data
   do next = ->
-    if file = files.pop()
+    if file = queue.pop()
       reader = new FileReader
       reader.onloadend = ->
         data["files[#{files.length}]"] =
@@ -27,10 +31,18 @@ $.upload = (files, options, callback) ->
     else
       boundary = '------multipartformboundary' + (new Date).getTime()
       body = buildMultiPart boundary, data
-      ret = $.ajax $.extend options,
+      ret = $.ajax _.extend {}, options,
         type: 'POST'
-        data: (new Uint8Array(Array.prototype.map.call(body, (x) -> x.charCodeAt(0) & 0xff))).buffer
+        data: body
         processData: false
         headers:
           'Content-Type': "multipart/form-data; boundary=#{boundary}"
+        xhr: ->
+          x = $.ajaxSettings.xhr()
+          x.send = sendAsBinary
+          if x.upload && _.isFunction(options.progress)
+            x.upload.addEventListener 'progress', (event) ->
+              options.progress.call files, event.loaded / event.total if event.lengthComputable
+            , false
+          x
       callback.call ret if _.isFunction(callback)
