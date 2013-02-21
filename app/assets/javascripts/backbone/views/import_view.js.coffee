@@ -46,7 +46,21 @@ dimensions =
   small: [362, 107]
   large: [409, 358]
 
-sizeInKb = (bytes) -> (bytes / 0x400).toFixed(1) + 'kb'
+sizeInKb = (bytes) -> (bytes / 0x400   ).toFixed(1) + 'kb'
+sizeInMb = (bytes) -> (bytes / 0x100000).toFixed(2) + 'mb'
+
+fileGroupPrototype =
+  add: (file) ->
+    @files.push file
+    @size += file.size
+    @view.render()
+    this
+
+fileGroup = (view) ->
+  _.extend ((file) -> arguments.callee.add file), fileGroupPrototype,
+    size:  0
+    files: []
+    view:  view
 
 DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
 
@@ -65,11 +79,10 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
     @$body.html(template).prepend @progressBar.el
     @$log = @$('.log')
     @files =
-      total: []
-      succeeded: []
-      failed: []
-    @totalBytes = 0
-    @rejectedFileCount = 0
+      accepted:  fileGroup(this)
+      rejected:  fileGroup(this)
+      succeeded: fileGroup(this)
+      failed:    fileGroup(this)
 
   toggleDetails: ->
     @$el.toggleClass 'with-details'
@@ -78,8 +91,7 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
     @setWidthAndHeight.apply this, dimensions[if showDetails then 'large' else 'small']
 
   acceptFile: (file) ->
-    @files.total.push file
-    @totalBytes += file.size
+    @files.accepted file
     true
 
   log: (message, type) ->
@@ -90,26 +102,49 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
     this
 
   rejectFile: (file, reason) ->
-    ++@rejectedFileCount
+    @files.rejected file
     @log "Rejected '#{file.name}' without sending: #{reason}", 'error'
     false
 
   uploadsStarted: ->
     @allStartedAt = new Date
-    @log "Starting upload of #{@files.total.length} file(s) at #{@allStartedAt.toLocaleTimeString()}"
+    @log "Starting upload of #{@files.accepted.length} file(s) at #{@allStartedAt.toLocaleTimeString()}"
 
   uploadStarted: (file) ->
-    @fileStartedAt = new Date()
+    @fileStartedAt = new Date
     @log "Sending '#{file.name}' (#{sizeInKb(file.size)})..."
 
-  uploadProgressed: (file, progress) ->
+  uploadProgressed: (file, progress) -> @render progress
 
   uploadSucceeded: (file, title) ->
     fileType = if file.type == 'text/xml' then 'title' else 'poster for'
     elapsed = ((Date.now() - @fileStartedAt) / 1000).toFixed(1)
     @log "Imported #{fileType} '#{title}' in #{elapsed}sec", 'success'
+    @files.succeeded file
 
   uploadFailed: (file, errors) ->
     elapsed = ((Date.now() - @fileStartedAt) / 1000).toFixed(1)
     errorText = $.map(errors, (error)-> "[#{error.code}] #{error.message}").join("\n")
     @log "Failed after #{elapsed}sec:\n#{errorText}", 'error'
+    @files.failed file
+
+  render: (partialProgress = 0) ->
+    files = @files
+
+    @$('.files .total'    ).text total = files.accepted.files.length + files.rejected.files.length
+    @$('.files .accepted' ).text succeeded = files.succeeded.files.length
+    @$('.files .rejected' ).text (failed = files.failed.files.length) + files.rejected.files.length
+    @$('.files .remaining').text total - succeeded - failed
+
+    @progressBar.progress progress = (succeeded + failed + partialProgress) / total
+
+    @$('.data  .total'    ).text sizeInMb total = files.accepted.size + files.rejected.size
+    @$('.data  .accepted' ).text sizeInMb succeeded = files.succeeded.size
+    @$('.data  .rejected' ).text sizeInMb (failed = files.failed.size) + files.rejected.size
+    @$('.data  .remaining').text sizeInMb total - succeeded - failed
+
+    if @allStartedAt
+      elapsed = (Date.now() - @allStartedAt) / 60000
+      if elapsed > 0 && progress > 0
+        remaining = elapsed / progress - elapsed
+        @$('.remaining-time .value').text Math.floor(remaining) + ':' + ('0' + Math.round(remaining % 1 * 60)).slice(-2)
