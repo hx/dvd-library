@@ -43,8 +43,10 @@ template = """
 """
 
 dimensions =
-  small: [362, 111]
+  small: [362, 107]
   large: [409, 358]
+
+sizeInKb = (bytes) -> (bytes / 0x400).toFixed(1) + 'kb'
 
 DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
 
@@ -62,7 +64,10 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
     @progressBar = new DvdLibrary.Views.ProgressBarView
     @$body.html(template).prepend @progressBar.el
     @$log = @$('.log')
-    @files = []
+    @files =
+      total: []
+      succeeded: []
+      failed: []
     @totalBytes = 0
     @rejectedFileCount = 0
 
@@ -73,22 +78,38 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
     @setWidthAndHeight.apply this, dimensions[if showDetails then 'large' else 'small']
 
   acceptFile: (file) ->
-    @files.push file
+    @files.total.push file
     @totalBytes += file.size
     true
 
   log: (message, type) ->
-    $('<p>').appendTo(@$log).text(message).addClass(type || 'notice')
+    el = @$log[0]
+    scroll = el.scrollTop == el.scrollHeight
+    $('<p>').appendTo(el).text(message).addClass(type || 'notice')
+    el.scrollTop = el.scrollHeight if scroll
+    this
 
   rejectFile: (file, reason) ->
     ++@rejectedFileCount
-    @log "Rejected '#{file.name}': #{reason}"
+    @log "Rejected '#{file.name}' without sending: #{reason}", 'error'
     false
 
+  uploadsStarted: ->
+    @allStartedAt = new Date
+    @log "Starting upload of #{@files.total.length} file(s) at #{@allStartedAt.toLocaleTimeString()}"
+
   uploadStarted: (file) ->
+    @fileStartedAt = new Date()
+    @log "Sending '#{file.name}' (#{sizeInKb(file.size)})..."
 
   uploadProgressed: (file, progress) ->
 
   uploadSucceeded: (file, title) ->
+    fileType = if file.type == 'text/xml' then 'title' else 'poster for'
+    elapsed = ((Date.now() - @fileStartedAt) / 1000).toFixed(1)
+    @log "Imported #{fileType} '#{title}' in #{elapsed}sec", 'success'
 
   uploadFailed: (file, errors) ->
+    elapsed = ((Date.now() - @fileStartedAt) / 1000).toFixed(1)
+    errorText = $.map(errors, (error)-> "[#{error.code}] #{error.message}").join("\n")
+    @log "Failed after #{elapsed}sec:\n#{errorText}", 'error'

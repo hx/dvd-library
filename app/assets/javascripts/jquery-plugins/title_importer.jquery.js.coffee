@@ -11,7 +11,7 @@ uploadFilesToLibrary = (files, library) ->
         view.acceptFile file
     before:
       each: (file) -> view.uploadStarted(file)
-      all: -> view.show()
+      all: -> view.show().uploadsStarted()
     after:
       each: (file, response) ->
         if response.errors.length

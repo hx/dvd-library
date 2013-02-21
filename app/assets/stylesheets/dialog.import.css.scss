@@ -1,3 +1,5 @@
+@import "compass/css3/transition";
+
 .dialog.import {
 
   .progress-bar {
@@ -37,7 +39,9 @@
   }
 
   div.details {
-    display: none;
+    padding-top: 4px;
+    @include transition-property(padding);
+    @include transition-duration(500ms);
     clear: both;
 
     table {
@@ -65,13 +69,20 @@
       margin-top: 7px;
       height: 167px;
       overflow: auto;
+      p {
+        padding-left: 1em;
+        text-indent: -1em;
+        white-space: pre-line;
+      }
+      .success { color: #deffdc }
+      .error   { color: #fe6b6b }
     }
   }
 
   &.with-details {
 
     div.details {
-      display: block;
+      padding-top: 0;
     }
   }
 
