@@ -132,15 +132,15 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
 
     @$('.files .total'    ).text total = files.accepted.files.length + files.rejected.files.length
     @$('.files .accepted' ).text succeeded = files.succeeded.files.length
-    @$('.files .rejected' ).text (failed = files.failed.files.length) + files.rejected.files.length
-    @$('.files .remaining').text total - succeeded - failed
+    @$('.files .rejected' ).text (failed = files.failed.files.length) + (rejected = files.rejected.files.length)
+    @$('.files .remaining').text total - succeeded - failed - rejected
 
-    @progressBar.progress progress = (succeeded + failed + partialProgress) / total
+    @progressBar.progress progress = (succeeded + failed + partialProgress) / (total - rejected)
 
     @$('.data  .total'    ).text sizeInMb total = files.accepted.size + files.rejected.size
     @$('.data  .accepted' ).text sizeInMb succeeded = files.succeeded.size
-    @$('.data  .rejected' ).text sizeInMb (failed = files.failed.size) + files.rejected.size
-    @$('.data  .remaining').text sizeInMb total - succeeded - failed
+    @$('.data  .rejected' ).text sizeInMb (failed = files.failed.size) + (rejected = files.rejected.size)
+    @$('.data  .remaining').text sizeInMb total - succeeded - failed - rejected
 
     if @allStartedAt
       elapsed = (Date.now() - @allStartedAt) / 60000
