@@ -83,6 +83,26 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
       rejected:  fileGroup(this)
       succeeded: fileGroup(this)
       failed:    fileGroup(this)
+    @statsRenderers =
+      files: @statsRow('files', (->@files.length))
+      data:  @statsRow('data' , (->@size), sizeInMb)
+
+  statsRow: (rowClass, property, filter = (x) -> x) ->
+    divs =
+      total: 0
+      accepted: 0
+      rejected: 0
+      remaining: 0
+    files = @files
+    prop = (x) -> property.call(x)
+    for i of divs
+      divs[i] = @$(".#{rowClass} .#{i}")
+    ->
+      divs.total.text     filter total = prop(files.accepted) + (rejected = prop(files.rejected))
+      divs.accepted.text  filter succeeded = prop(files.succeeded)
+      divs.rejected.text  filter rejected + (failed = prop(files.failed))
+      divs.remaining.text filter total - succeeded - failed - rejected
+      this
 
   toggleDetails: ->
     @$el.toggleClass 'with-details'
@@ -129,19 +149,9 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
 
   render: (partialProgress = 0) ->
     files = @files
-
-    @$('.files .total'    ).text total = files.accepted.files.length + files.rejected.files.length
-    @$('.files .accepted' ).text succeeded = files.succeeded.files.length
-    @$('.files .rejected' ).text (failed = files.failed.files.length) + (rejected = files.rejected.files.length)
-    @$('.files .remaining').text total - succeeded - failed - rejected
-
-    @progressBar.progress progress = (succeeded + failed + partialProgress) / (total - rejected)
-
-    @$('.data  .total'    ).text sizeInMb total = files.accepted.size + files.rejected.size
-    @$('.data  .accepted' ).text sizeInMb succeeded = files.succeeded.size
-    @$('.data  .rejected' ).text sizeInMb (failed = files.failed.size) + (rejected = files.rejected.size)
-    @$('.data  .remaining').text sizeInMb total - succeeded - failed - rejected
-
+    @statsRenderers.files().data()
+    progress = (files.succeeded.files.length + files.failed.files.length + partialProgress) / files.accepted.files.length
+    @progressBar.progress progress
     if @allStartedAt
       elapsed = (Date.now() - @allStartedAt) / 60000
       if elapsed > 0 && progress > 0
