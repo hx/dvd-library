@@ -96,9 +96,8 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
 
   log: (message, type) ->
     el = @$log[0]
-    scroll = el.scrollTop == el.scrollHeight
     $('<p>').appendTo(el).text(message).addClass(type || 'notice')
-    el.scrollTop = el.scrollHeight if scroll
+    el.scrollTop = el.scrollHeight
     this
 
   rejectFile: (file, reason) ->

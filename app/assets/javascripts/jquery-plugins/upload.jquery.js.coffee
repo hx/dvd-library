@@ -11,8 +11,9 @@ buildMultiPart = (boundary, data) ->
     ret += crlf + crlf + value.data || value + crlf
   ret + dashdash + boundary + dashdash + crlf
 
-sendAsBinary = XMLHttpRequest.prototype.sendAsBinary || (data) ->
-  @send (new Uint8Array(Array.prototype.map.call(data, (x) -> x.charCodeAt(0) & 0xff))).buffer
+xhrProto = XMLHttpRequest.prototype
+sendAsBinary = xhrProto.sendAsBinary || (data) ->
+  xhrProto.send.call this, (new Uint8Array(Array.prototype.map.call(data, (x) -> x.charCodeAt(0) & 0xff))).buffer
 
 $.upload = (files, options, callback) ->
   files = [files] unless files.push

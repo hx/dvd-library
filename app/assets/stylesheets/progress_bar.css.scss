@@ -8,6 +8,10 @@
   overflow: hidden;
   @include border-radius(50px);
   @include background(linear-gradient(top, #525252, #343434));
+  
+  // fix for border-radius + overflow:hidden in Webkit (tested in Chrome)
+  // http://stackoverflow.com/questions/5736503/how-to-make-css3-rounded-corners-hide-overflow-in-chrome-opera
+  -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
 
   .inner {
     position: absolute;
