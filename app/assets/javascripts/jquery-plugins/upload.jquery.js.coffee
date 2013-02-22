@@ -19,7 +19,10 @@ $.upload = (files, options, callback) ->
   files = [files] unless files.push
   queue = files.slice()
   data = _.extend {}, options.data
+  aborted = false
+  xhr = null
   do next = ->
+    return if aborted
     if file = queue.pop()
       reader = new FileReader
       reader.onloadend = ->
@@ -32,7 +35,7 @@ $.upload = (files, options, callback) ->
     else
       boundary = '------multipartformboundary' + (new Date).getTime()
       body = buildMultiPart boundary, data
-      ret = $.ajax _.extend {}, options,
+      xhr = $.ajax _.extend {}, options,
         type: 'POST'
         data: body
         processData: false
@@ -46,4 +49,7 @@ $.upload = (files, options, callback) ->
               options.progress.call files, event.loaded / event.total if event.lengthComputable
             , false
           x
-      callback.call ret if _.isFunction(callback)
+      callback.call xhr if _.isFunction(callback)
+  abort: ->
+    xhr?.abort()
+    aborted = true

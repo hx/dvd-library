@@ -4,10 +4,10 @@
 template = """
 <p class="remaining-time">
     Remaining:
-    <span class="value">um...</span>
 </p>
 <ul class="links">
-    <li><a href="javascript:" class="cancel">Cancel</a></li>
+    <li><a href="javascript:" class="pause"  >Pause</a></li>
+    <li><a href="javascript:" class="cancel" >Cancel</a></li>
     <li><a href="javascript:" class="details">Show details</a></li>
 </ul>
 <div class="details">
@@ -49,15 +49,19 @@ dimensions =
 sizeInKb = (bytes) -> (bytes / 0x400   ).toFixed(1) + 'kb'
 sizeInMb = (bytes) -> (bytes / 0x100000).toFixed(2) + 'mb'
 
-fileGroupPrototype =
-  add: (file) ->
-    @files.push file
-    @size += file.size
-    @view.render()
-    this
+durationInMSS = (milliseconds) ->
+  minutes = milliseconds / 60000
+  Math.floor(minutes) + ':' + ('0' + Math.round(minutes % 1 * 60)).slice(-2)
+
+fileGroupAdd = (file, skipRender) ->
+  @files.push file
+  @size += file.size
+  @view.render() unless skipRender
+  this
 
 fileGroup = (view) ->
-  _.extend ((file) -> arguments.callee.add file), fileGroupPrototype,
+  _.extend ((file) -> arguments.callee.add file),
+    add:   fileGroupAdd
     size:  0
     files: []
     view:  view
@@ -70,7 +74,9 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
   height: dimensions.small[1]
 
   events:
-    'click a.details': 'toggleDetails'
+    'click a.details':  'toggleDetails'
+    'click a.pause':    'clickPauseResume'
+    'click a.cancel':   'clickCancel'
 
   initialize: ->
     @init()
@@ -78,6 +84,7 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
     @progressBar = new DvdLibrary.Views.ProgressBarView
     @$body.html(template).prepend @progressBar.el
     @$log = @$('.log')
+    @$remaining = @$('.remaining-time')
     @files =
       accepted:  fileGroup(this)
       rejected:  fileGroup(this)
@@ -137,23 +144,63 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
 
   uploadSucceeded: (file, title) ->
     fileType = if file.type == 'text/xml' then 'title' else 'poster for'
-    elapsed = ((Date.now() - @fileStartedAt) / 1000).toFixed(1)
-    @log "Imported #{fileType} '#{title}' in #{elapsed}sec", 'success'
-    @files.succeeded file
+    @log "Imported #{fileType} '#{title}' in #{@fileElapsed()}", 'success'
+    @files.succeeded file, true
 
   uploadFailed: (file, errors) ->
-    elapsed = ((Date.now() - @fileStartedAt) / 1000).toFixed(1)
     errorText = $.map(errors, (error)-> "[#{error.code}] #{error.message}").join("\n")
-    @log "Failed after #{elapsed}sec:\n#{errorText}", 'error'
-    @files.failed file
+    @log "Failed after #{@fileElapsed()}:\n#{errorText}", 'error'
+    @files.failed file, true
+
+  clickPauseResume: ->
+    @trigger 'pauseResume'
+
+  clickCancel: ->
+    if @finished
+      @hide()
+      @trigger 'hide'
+    else
+      @trigger 'cancel'
+
+  pause: (paused) ->
+    return if @finished
+    @paused = paused || false
+    @$el.toggleClass 'paused', paused
+    @$('.links .pause').text if paused then 'Resume' else 'Pause'
+    if paused
+      @_elapsed = @elapsed()
+    else
+      @allStartedAt = new Date
+    @render()
+
+  cancel: ->
+    @showAsFinished()
+    @$remaining.text "Cancelled after #{durationInMSS(@elapsed())}"
+
+  uploadsFinished: ->
+    @showAsFinished()
+    @$remaining.text 'Finished in ' + durationInMSS(Date.now() - @allStartedAt)
+
+  showAsFinished: ->
+    @finished = true
+    @$el.addClass 'finished'
+    @$('.links .pause').parent().remove()
+    @$('.links .cancel').text 'Close'
+
+  elapsed: -> (Date.now() - @allStartedAt) + (@_elapsed || 0)
+
+  fileElapsed: -> ((Date.now() - @fileStartedAt) / 1000).toFixed(1) + 'sec'
 
   render: (partialProgress = 0) ->
     files = @files
     @statsRenderers.files().data()
     progress = (files.succeeded.files.length + files.failed.files.length + partialProgress) / files.accepted.files.length
     @progressBar.progress progress
-    if @allStartedAt
-      elapsed = (Date.now() - @allStartedAt) / 60000
-      if elapsed > 0 && progress > 0
-        remaining = elapsed / progress - elapsed
-        @$('.remaining-time .value').text Math.floor(remaining) + ':' + ('0' + Math.round(remaining % 1 * 60)).slice(-2)
+    if @paused
+      remainingText = 'Paused'
+    else
+      remainingText = 'Remaining: '
+      if @allStartedAt
+        elapsed = @elapsed()
+        remainingText += durationInMSS(elapsed / progress - elapsed) if elapsed > 0 && progress > 0
+    @$remaining.text remainingText

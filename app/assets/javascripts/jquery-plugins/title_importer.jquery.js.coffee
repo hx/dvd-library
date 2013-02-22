@@ -1,6 +1,14 @@
 uploadFilesToLibrary = (files, library) ->
   view = new DvdLibrary.Views.ImportView model: library
-  $.upload.batch Array.prototype.slice.call(files).sort((a, b) -> b.type.localeCompare a.type),
+  view.on 'pauseResume', ->
+    paused = !batch.paused
+    batch[if paused then 'pause' else 'resume']()
+    view.pause paused
+  .on 'cancel', ->
+    batch.cancel()
+    view.cancel()
+
+  batch = $.upload.batch Array.prototype.slice.call(files).sort((a, b) -> b.type.localeCompare a.type),
     url: library.url() + '/titles.json'
     filter: (file) ->
       if !file.name.match(/.+(f\.jpg|\.xml)$/i)
@@ -18,7 +26,7 @@ uploadFilesToLibrary = (files, library) ->
           view.uploadFailed file, response.errors
         else
           view.uploadSucceeded file, response.title.title
-      all: ->
+      all: -> view.uploadsFinished()
     progress: (files, progress) -> view.uploadProgressed files[0], progress
 
 $.fn.makeImporterForLibrary = (library) ->

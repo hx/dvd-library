@@ -5,24 +5,28 @@ batchDefaults =
   before: {}
   after:  {}
 
+defaultResume = -> @paused = false
+
 class Batch
-  pause:  -> @paused    = true
-  cancel: -> @cancelled = true
-  resume: ->
+  pause:  -> @paused = @resume == defaultResume || @paused
+  cancel: -> @cancelled = true; @oncancel?()
+  resume: defaultResume
 
 whenReady = (batch, method) ->
   return if batch.cancelled
   if batch.paused
     batch.resume = ->
       batch.paused = false
-      batch.resume = ->
+      batch.resume = defaultResume
       method()
   else
     method()
   !batch.paused
 
 $.upload.batch = (files, options) ->
+  uploader = null
   batch = new Batch
+  batch.oncancel = -> uploader?.abort()
   options = $.extend {}, batchDefaults, options
   files = _.filter files, options.filter, this if _.isFunction(options.filter)
   filesForRequest = null
@@ -39,7 +43,7 @@ $.upload.batch = (files, options) ->
             options.before.each?.call batch, file
             whenReady batch, nextBeforeEach
           else
-            $.upload filesForRequest, uploadOptions, -> @done (response) ->
+            uploader = $.upload filesForRequest, uploadOptions, -> @done (response) ->
               queue = filesForRequest.slice()
               do nextAfterEach = ->
                 if file = queue.shift()
