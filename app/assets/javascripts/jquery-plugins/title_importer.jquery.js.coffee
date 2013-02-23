@@ -1,4 +1,4 @@
-uploadFilesToLibrary = (files, library) ->
+uploadFilesToLibrary = (files, library, options = {}) ->
   view = new DvdLibrary.Views.ImportView model: library
   view.on 'pauseResume', ->
     paused = !batch.paused
@@ -7,6 +7,8 @@ uploadFilesToLibrary = (files, library) ->
   .on 'cancel', ->
     batch.cancel()
     view.cancel()
+  .on 'hide', ->
+    options.done?()
 
   batch = $.upload.batch Array.prototype.slice.call(files).sort((a, b) -> b.type.localeCompare a.type),
     url: library.url() + '/titles.json'
@@ -29,7 +31,7 @@ uploadFilesToLibrary = (files, library) ->
       all: -> view.uploadsFinished()
     progress: (files, progress) -> view.uploadProgressed files[0], progress
 
-$.fn.makeImporterForLibrary = (library) ->
+$.fn.makeImporterForLibrary = (library, options) ->
 
   @each ->
     thisLibrary = if _.isFunction(library) then library.call(this) else library
@@ -37,6 +39,6 @@ $.fn.makeImporterForLibrary = (library) ->
     $(this).onDrag
       over:         -> @addClass    'dropping'
       out:          -> @removeClass 'dropping'
-      drop: (files) -> @removeClass 'dropping'; uploadFilesToLibrary files, thisLibrary
+      drop: (files) -> @removeClass 'dropping'; uploadFilesToLibrary files, thisLibrary, options
 
   this

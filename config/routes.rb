@@ -51,6 +51,7 @@ DvdLibrary::Application.routes.draw do
   # root :to => 'welcome#index'
 
   get 'tests', to: 'qunit#show'
+  match 'tests/echo', to: 'qunit#echo'
 
   get 'suggestions', to: 'suggestions#search'
 

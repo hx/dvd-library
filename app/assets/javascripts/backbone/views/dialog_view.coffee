@@ -32,12 +32,14 @@ DvdLibrary.Views.DialogView = DialogView = Backbone.View.extend
     unless @el.parentNode
       @$el.appendTo 'body'
       setTimeout ( => @$el.addClass('visible') ), 100
+      @trigger 'show'
     this
 
   hide: ->
     if @el.parentNode
       @$el.removeClass('visible');
       setTimeout ( => @$el.remove()), 1000
+      @trigger 'hide'
     this
 
   setWidth: (width) ->

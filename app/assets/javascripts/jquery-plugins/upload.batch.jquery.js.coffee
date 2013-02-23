@@ -30,27 +30,36 @@ $.upload.batch = (files, options) ->
   options = $.extend {}, batchDefaults, options
   files = _.filter files, options.filter, this if _.isFunction(options.filter)
   filesForRequest = null
+  queue = null
   uploadOptions = url: options.url
   uploadOptions.progress = (progress) -> options.progress.call batch, filesForRequest, progress if options.progress
+
+  beginNextRequest = ->
+    filesForRequest = files.splice 0, options.filesPerRequest
+    if filesForRequest.length
+      queue = filesForRequest.slice()
+      doPreFilters()
+    else
+      options.after.all?.call batch
+
+  doPreFilters = ->
+    if file = queue.shift()
+      options.before.each?.call batch, file
+      whenReady batch, doPreFilters
+    else
+      uploader = $.upload filesForRequest, uploadOptions, -> @done (response) ->
+        queue = filesForRequest.slice()
+        doPostFilters(response)
+
+  doPostFilters = (response) ->
+    if file = queue.shift()
+      options.after.each?.call batch, file, response
+      whenReady batch, doPostFilters
+    else
+      beginNextRequest()
+
   whenReady batch, ->
     options.before.all?.call batch
-    whenReady batch, nextRequest = ->
-      filesForRequest = files.splice 0, options.filesPerRequest
-      if filesForRequest.length
-        queue = filesForRequest.slice()
-        do nextBeforeEach = ->
-          if file = queue.shift()
-            options.before.each?.call batch, file
-            whenReady batch, nextBeforeEach
-          else
-            uploader = $.upload filesForRequest, uploadOptions, -> @done (response) ->
-              queue = filesForRequest.slice()
-              do nextAfterEach = ->
-                if file = queue.shift()
-                  options.after.each?.call batch, file, response
-                  whenReady batch, nextAfterEach
-                else
-                  nextRequest()
-      else
-        options.after.all?.call batch
+    whenReady batch, beginNextRequest
+
   batch

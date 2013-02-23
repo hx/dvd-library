@@ -1,19 +1,14 @@
-dashdash = '--'
-crlf = "\r\n"
-
 buildMultiPart = (boundary, data) ->
   ret = ''
   for key, value of data
-    ret += dashdash + boundary + crlf
-    ret += "Content-Disposition: form-data; name=\"#{key}\""
+    body = value.data || unescape(encodeURIComponent(value))
+    ret += "--#{boundary}\r\nContent-Disposition: form-data; name=\"#{key}\""
     ret += "; filename=\"#{value.name}\"" if value.name
-    ret += "#{crlf}Content-Type: #{value.type}" if value.type
-    ret += crlf + crlf + value.data || value + crlf
-  ret + dashdash + boundary + dashdash + crlf
+    ret += "\r\nContent-Type: #{value.type || 'text/plain; charset=utf-8'}\r\n\r\n#{body}\r\n"
+  "#{ret}--#{boundary}--\r\n"
 
 xhrProto = XMLHttpRequest.prototype
-sendAsBinary = xhrProto.sendAsBinary || (data) ->
-  xhrProto.send.call this, (new Uint8Array(Array.prototype.map.call(data, (x) -> x.charCodeAt(0) & 0xff))).buffer
+sendAsBinary = xhrProto.sendAsBinary || (data) -> xhrProto.send.call this, (new Uint8Array(data)).buffer
 
 $.upload = (files, options, callback) ->
   files = [files] unless files.push
@@ -33,7 +28,7 @@ $.upload = (files, options, callback) ->
         next()
       reader.readAsBinaryString file
     else
-      boundary = '------multipartformboundary' + (new Date).getTime()
+      boundary = Math.random().toString(16).slice(2) + Date.now()
       body = buildMultiPart boundary, data
       xhr = $.ajax _.extend {}, options,
         type: 'POST'

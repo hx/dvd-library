@@ -158,7 +158,6 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
   clickCancel: ->
     if @finished
       @hide()
-      @trigger 'hide'
     else
       @trigger 'cancel'
 

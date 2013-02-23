@@ -34,7 +34,7 @@ Views.LibraryView = LibraryView = Backbone.View.extend
     @scopeTokensView.on 'removeScope', _.bind @removeScope, this
     @scopeTokensView.on 'reverseSort', _.bind @reverseSort, this
 
-    @$el.makeImporterForLibrary @model
+    @$el.makeImporterForLibrary @model, done: DvdLibrary.reload
 
     @render
 
