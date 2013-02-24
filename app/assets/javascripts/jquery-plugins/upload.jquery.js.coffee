@@ -8,7 +8,8 @@ buildMultiPart = (boundary, data) ->
   "#{ret}--#{boundary}--\r\n"
 
 xhrProto = XMLHttpRequest.prototype
-sendAsBinary = xhrProto.sendAsBinary || (data) -> xhrProto.send.call this, (new Uint8Array(data)).buffer
+sendAsBinary = xhrProto.sendAsBinary || (data) ->
+  xhrProto.send.call this, (new Uint8Array(Array.prototype.map.call(data, (x) -> x.charCodeAt(0) & 0xff))).buffer
 
 $.upload = (files, options, callback) ->
   files = [files] unless files.push
