@@ -39,6 +39,6 @@ $.fn.makeImporterForLibrary = (library, options) ->
     $(this).onDrag
       over:         -> @addClass    'dropping'
       out:          -> @removeClass 'dropping'
-      drop: (files) -> @removeClass 'dropping'; uploadFilesToLibrary files, thisLibrary, options
+      drop: (files) -> @removeClass 'dropping'; uploadFilesToLibrary files, thisLibrary, options if files.length
 
   this

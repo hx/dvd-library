@@ -29,6 +29,7 @@ $.upload.batch = (files, options) ->
   batch.oncancel = -> uploader?.abort()
   options = $.extend {}, batchDefaults, options
   files = _.filter files, options.filter, this if _.isFunction(options.filter)
+  return unless files.length
   filesForRequest = null
   queue = null
   uploadOptions = url: options.url

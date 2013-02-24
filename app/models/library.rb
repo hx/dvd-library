@@ -14,6 +14,8 @@ class Library < ActiveRecord::Base
 
   attr_accessible :name
 
+  after_initialize { |library| library.name ||= 'New Library' }
+
   has_many :titles
 
 end

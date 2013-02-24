@@ -123,7 +123,7 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
 
   log: (message, type) ->
     el = @$log[0]
-    $('<p>').appendTo(el).text(message).addClass(type || 'notice')
+    $('<p>').appendTo(el).text(message).addClass(type || 'info')
     el.scrollTop = el.scrollHeight
     this
 
@@ -134,7 +134,7 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
 
   uploadsStarted: ->
     @allStartedAt = new Date
-    @log "Starting upload of #{@files.accepted.length} file(s) at #{@allStartedAt.toLocaleTimeString()}"
+    @log "Starting upload of #{@files.accepted.files.length} file(s) at #{@allStartedAt.toLocaleTimeString()}", 'notice'
 
   uploadStarted: (file) ->
     @fileStartedAt = new Date
@@ -178,7 +178,9 @@ DvdLibrary.Views.ImportView = ImportView = DvdLibrary.Views.DialogView.extend
 
   uploadsFinished: ->
     @showAsFinished()
-    @$remaining.text 'Finished in ' + durationInMSS(Date.now() - @allStartedAt)
+    text = 'Finished in ' + durationInMSS(Date.now() - @allStartedAt)
+    @$remaining.text text
+    @log text, 'notice'
 
   showAsFinished: ->
     @finished = true
