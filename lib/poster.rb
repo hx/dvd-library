@@ -100,25 +100,8 @@ class Poster
   def third_party
     return @third_party unless @third_party.nil?
     if @title.third_party_poster[:url].nil?
-      if title.tv?
-        #todo something for the tv shows
-      elsif @title.library.tmdb_api_key
-        Tmdb.api_key = @title.library.tmdb_api_key
-        Tmdb.default_language = 'en'
-        movie_titles = [title.title]
-        movie_titles.unshift "#{title.title} (#{title.production_year})" if title.production_year > 0
-        movie_titles << title.title.gsub(/&/, ' and ').gsub(/[^\w]+/, ' ')
-        movie_titles << title.title.gsub(/\s*[-:\/(].*/, ' ')
-        movie_titles.uniq.each do |movie_title|
-          movie_data = TmdbMovie.find title: movie_title, limit: 1, expand_results: false
-          if movie_data.respond_to? :poster
-            url = movie_data.poster.sizes.original.url
-            size = FastImage.size url, timeout: 5
-            @title.update_attribute :third_party_poster, {url: url, size: size}
-            break
-          end
-        end
-      end
+      tpp = ThirdPartyPoster.new @title
+      @title.update_attribute :third_party_poster, {url: tpp.url, size: tpp.size} if tpp.url
     end
     @third_party = @title.third_party_poster
   end

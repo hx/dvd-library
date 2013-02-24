@@ -6,9 +6,11 @@ class NameAndSeason
 
   def initialize(title)
     TITLE_PATTERNS.each do |pattern|
-      if match = title.match(pattern)
+      if (match = title.match pattern)
         @name = match[1]
-        return @season = NUMBER_DICTIONARY[season.downcase.sub(' ', '-')] || season.to_i if season = match[2] || match[3]
+        if (season = match[2] || match[3])
+          return @season = NUMBER_DICTIONARY[season.downcase.sub(' ', '-')] || season.to_i
+        end
       end
     end
   end
