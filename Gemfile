@@ -14,6 +14,7 @@ gem 'tvdb_party'
 gem 'fastimage'
 gem 'therubyracer', require: 'v8'
 gem 'chronic'
+gem 'thin'
 
 group :test, :development do
   gem 'capybara'

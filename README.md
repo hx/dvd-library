@@ -8,7 +8,7 @@ After yawning my way through a couple of Rails tutorials, I wanted a more effect
 
 ## Try it out
 
-DVD Library is staged at <http://dvd-library-staging.herokuapp.com>. It's a single dyno that spins down after inactivity, so it may take a minute when you first open it.
+DVD Library is staged at <http://dvds.hx.net.au>.
 
 ## How it works
 
